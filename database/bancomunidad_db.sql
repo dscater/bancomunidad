@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 03-11-2022 a las 17:49:01
+-- Tiempo de generación: 06-11-2022 a las 15:31:53
 -- Versión del servidor: 5.7.33
 -- Versión de PHP: 7.4.19
 
@@ -73,6 +73,15 @@ CREATE TABLE `asignacions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `asignacions`
+--
+
+INSERT INTO `asignacions` (`id`, `funcionario_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2022-11-06', '2022-11-06 13:55:51', '2022-11-06 13:55:51'),
+(2, 1, 3, '2022-11-06', '2022-11-06 14:03:50', '2022-11-06 14:03:50'),
+(3, 3, 1, '2022-11-06', '2022-11-06 14:14:24', '2022-11-06 14:14:24');
+
 -- --------------------------------------------------------
 
 --
@@ -86,6 +95,15 @@ CREATE TABLE `asignacion_detalles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `asignacion_detalles`
+--
+
+INSERT INTO `asignacion_detalles` (`id`, `asignacion_id`, `perfil_id`, `created_at`, `updated_at`) VALUES
+(10, 1, 3, '2022-11-06 14:15:49', '2022-11-06 14:15:49'),
+(12, 2, 6, '2022-11-06 15:30:20', '2022-11-06 15:30:20'),
+(13, 2, 5, '2022-11-06 15:30:39', '2022-11-06 15:30:39');
 
 -- --------------------------------------------------------
 
@@ -120,10 +138,10 @@ INSERT INTO `cargos` (`id`, `nombre`, `departamento`, `fecha_registro`, `created
 CREATE TABLE `formularios` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `codigo` bigint(20) NOT NULL,
-  `fecha_solicitud` date NOT NULL,
-  `fecha_respuesta` date NOT NULL,
-  `hora_solicitud` time NOT NULL,
-  `hora_respuesta` time NOT NULL,
+  `fecha_solicitud` date DEFAULT NULL,
+  `fecha_respuesta` date DEFAULT NULL,
+  `hora_solicitud` time DEFAULT NULL,
+  `hora_respuesta` time DEFAULT NULL,
   `funcionario_id` bigint(20) UNSIGNED NOT NULL,
   `tipo_acceso` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cargo_id` bigint(20) UNSIGNED DEFAULT NULL,
@@ -133,6 +151,14 @@ CREATE TABLE `formularios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `formularios`
+--
+
+INSERT INTO `formularios` (`id`, `codigo`, `fecha_solicitud`, `fecha_respuesta`, `hora_solicitud`, `hora_respuesta`, `funcionario_id`, `tipo_acceso`, `cargo_id`, `agencia_origen`, `agencia_destino`, `fecha_registro`, `created_at`, `updated_at`) VALUES
+(24, 1, NULL, NULL, NULL, NULL, 1, 'ALTO DE ACCESO', 2, 1, 2, '2022-11-06', '2022-11-06 15:20:48', '2022-11-06 15:25:48'),
+(26, 2, '2022-11-06', '2022-11-08', '11:28:00', '11:28:00', 3, 'CAMBIO DE AGENCIA', NULL, 1, 2, '2022-11-06', '2022-11-06 15:29:01', '2022-11-06 15:29:01');
 
 -- --------------------------------------------------------
 
@@ -213,7 +239,8 @@ CREATE TABLE `perfils` (
 
 INSERT INTO `perfils` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (3, 'PERFIL 1', '2022-11-03', '2022-11-03 16:59:07', '2022-11-03 16:59:07'),
-(5, 'PERFIL 2', '2022-11-03', '2022-11-03 16:59:28', '2022-11-03 16:59:28');
+(5, 'PERFIL 2', '2022-11-03', '2022-11-03 16:59:28', '2022-11-03 16:59:28'),
+(6, 'PERFIL 3', '2022-11-03', '2022-11-03 17:56:26', '2022-11-03 17:56:26');
 
 -- --------------------------------------------------------
 
@@ -236,7 +263,8 @@ CREATE TABLE `perfil_sistemas` (
 
 INSERT INTO `perfil_sistemas` (`id`, `perfil_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 3, 1, '2022-11-03', '2022-11-03 16:59:37', '2022-11-03 16:59:37'),
-(2, 5, 3, '2022-11-03', '2022-11-03 17:02:53', '2022-11-03 17:02:53');
+(2, 5, 3, '2022-11-03', '2022-11-03 17:02:53', '2022-11-03 17:02:53'),
+(3, 6, 3, '2022-11-03', '2022-11-03 17:56:30', '2022-11-03 17:56:30');
 
 -- --------------------------------------------------------
 
@@ -455,25 +483,25 @@ ALTER TABLE `agencias`
 -- AUTO_INCREMENT de la tabla `asignacions`
 --
 ALTER TABLE `asignacions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_detalles`
 --
 ALTER TABLE `asignacion_detalles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`
 --
 ALTER TABLE `cargos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `formularios`
 --
 ALTER TABLE `formularios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `funcionarios`
@@ -491,13 +519,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `perfils`
 --
 ALTER TABLE `perfils`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `perfil_sistemas`
 --
 ALTER TABLE `perfil_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `personal_access_tokens`
@@ -509,7 +537,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `regionals`
 --
 ALTER TABLE `regionals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `sistemas`
