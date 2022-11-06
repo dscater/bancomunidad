@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Funcionarios</h1>
+                        <h1>Formularios</h1>
                     </div>
                 </div>
             </div>
@@ -20,13 +20,13 @@
                                         <button
                                             v-if="
                                                 permisos.includes(
-                                                    'funcionarios.create'
+                                                    'formularios.create'
                                                 )
                                             "
                                             class="btn btn-outline-primary bg-primary btn-flat btn-block"
                                             @click="
                                                 abreModal('nuevo');
-                                                limpiaFuncionario();
+                                                limpiaFormulario();
                                             "
                                         >
                                             <i class="fa fa-plus"></i>
@@ -84,6 +84,69 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template #cell(detalle)="row">
+                                                    <template
+                                                        v-if="
+                                                            row.item
+                                                                .tipo_acceso ==
+                                                            'ALTO DE ACCESO'
+                                                        "
+                                                    >
+                                                        <p>
+                                                            <strong
+                                                                >Cargo: </strong
+                                                            ><br />{{
+                                                                row.item.cargo
+                                                                    .nombre
+                                                            }}
+                                                        </p>
+                                                    </template>
+                                                    <template v-else>
+                                                        <p>
+                                                            <strong
+                                                                >Agencia origen: </strong
+                                                            ><br />{{
+                                                                row.item
+                                                                    .agencia_origen
+                                                                    .nombre
+                                                            }}
+                                                        </p>
+                                                        <p>
+                                                            <strong
+                                                                >Agencia
+                                                                destino: </strong
+                                                            ><br />{{
+                                                                row.item
+                                                                    .agencia_destino
+                                                                    .nombre
+                                                            }}
+                                                        </p>
+                                                    </template>
+                                                </template>
+                                                <template
+                                                    #cell(fecha_solicitud)="row"
+                                                >
+                                                    {{
+                                                        row.item.fecha_solicitud
+                                                            ? formatoFecha(
+                                                                  row.item
+                                                                      .fecha_solicitud
+                                                              )
+                                                            : ""
+                                                    }}
+                                                </template>
+                                                <template
+                                                    #cell(fecha_respuesta)="row"
+                                                >
+                                                    {{
+                                                        row.item.fecha_respuesta
+                                                            ? formatoFecha(
+                                                                  row.item
+                                                                      .fecha_respuesta
+                                                              )
+                                                            : ""
+                                                    }}
+                                                </template>
                                                 <template
                                                     #cell(fecha_registro)="row"
                                                 >
@@ -122,10 +185,14 @@
                                                             class="btn-flat btn-block"
                                                             title="Eliminar registro"
                                                             @click="
-                                                                eliminaFuncionario(
+                                                                eliminaFormulario(
                                                                     row.item.id,
                                                                     row.item
-                                                                        .full_name
+                                                                        .funcionario
+                                                                        .full_name +
+                                                                        ' <br/><small>' +
+                                                                        row.item
+                                                                            .tipo_acceso +'</small>'
                                                                 )
                                                             "
                                                         >
@@ -176,9 +243,9 @@
         <Nuevo
             :muestra_modal="muestra_modal"
             :accion="modal_accion"
-            :funcionario="oFuncionario"
+            :formulario="oFormulario"
             @close="muestra_modal = false"
-            @envioModal="getFuncionarios"
+            @envioModal="getFormularios"
         ></Nuevo>
     </div>
 </template>
@@ -197,24 +264,43 @@ export default {
             showOverlay: false,
             fields: [
                 {
-                    key: "ci",
-                    label: "C.I.",
-                    sortable: true,
-                },
-                { key: "full_name", label: "Nombre", sortable: true },
-                {
-                    key: "cargo.nombre",
-                    label: "Cargo",
+                    key: "codigo",
+                    label: "Código",
                     sortable: true,
                 },
                 {
-                    key: "regional.nombre",
-                    label: "Regional",
+                    key: "fecha_solicitud",
+                    label: "Fecha de Solicitud",
                     sortable: true,
                 },
                 {
-                    key: "agencia.nombre",
-                    label: "Agencia",
+                    key: "fecha_respuesta",
+                    label: "Fecha de Respuesta",
+                    sortable: true,
+                },
+                {
+                    key: "hora_solicitud",
+                    label: "Hora de Solicitud",
+                    sortable: true,
+                },
+                {
+                    key: "hora_respuesta",
+                    label: "Hora de Respuesta",
+                    sortable: true,
+                },
+                {
+                    key: "funcionario.full_name",
+                    label: "Funcionario",
+                    sortable: true,
+                },
+                {
+                    key: "tipo_acceso",
+                    label: "Tipo de Acceso",
+                    sortable: true,
+                },
+                {
+                    key: "detalle",
+                    label: "Detalle",
                     sortable: true,
                 },
                 {
@@ -231,15 +317,18 @@ export default {
             }),
             muestra_modal: false,
             modal_accion: "nuevo",
-            oFuncionario: {
+            oFormulario: {
                 id: 0,
-                ci: "",
-                nombre: "",
-                paterno: "",
-                materno: "",
+                codigo: "",
+                fecha_solicitud: "",
+                fecha_respuesta: "",
+                hora_solicitud: "",
+                hora_respuesta: "",
+                funcionario_id: "",
+                tipo_acceso: "",
                 cargo_id: "",
-                regional_id: "",
-                agencia_id: "",
+                agencia_origen: "",
+                agencia_destino: "",
             },
             currentPage: 1,
             perPage: 5,
@@ -257,29 +346,48 @@ export default {
     },
     mounted() {
         this.loadingWindow.close();
-        this.getFuncionarios();
+        this.getFormularios();
     },
     methods: {
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
-            this.oFuncionario.id = item.id;
-            this.oFuncionario.ci = item.ci ? item.ci : "";
-            this.oFuncionario.nombre = item.nombre ? item.nombre : "";
-            this.oFuncionario.paterno = item.paterno ? item.paterno : "";
-            this.oFuncionario.materno = item.materno ? item.materno : "";
-            this.oFuncionario.cargo_id = item.cargo_id ? item.cargo_id : "";
-            this.oFuncionario.regional_id = item.regional_id ? item.regional_id : "";
-            this.oFuncionario.agencia_id = item.agencia_id ? item.agencia_id : "";
+            this.oFormulario.id = item.id;
+            this.oFormulario.codigo = item.codigo ? item.codigo : "";
+            this.oFormulario.fecha_solicitud = item.fecha_solicitud
+                ? item.fecha_solicitud
+                : "";
+            this.oFormulario.fecha_respuesta = item.fecha_respuesta
+                ? item.fecha_respuesta
+                : "";
+            this.oFormulario.hora_solicitud = item.hora_solicitud
+                ? item.hora_solicitud
+                : "";
+            this.oFormulario.hora_respuesta = item.hora_respuesta
+                ? item.hora_respuesta
+                : "";
+            this.oFormulario.funcionario_id = item.funcionario_id
+                ? item.funcionario_id
+                : "";
+            this.oFormulario.tipo_acceso = item.tipo_acceso
+                ? item.tipo_acceso
+                : "";
+            this.oFormulario.cargo_id = item.cargo_id ? item.cargo_id : "";
+            this.oFormulario.agencia_origen = item.agencia_origen
+                ? item.agencia_origen
+                : "";
+            this.oFormulario.agencia_destino = item.agencia_destino
+                ? item.agencia_destino
+                : "";
 
             this.modal_accion = "edit";
             this.muestra_modal = true;
         },
 
-        // Listar Funcionarios
-        getFuncionarios() {
+        // Listar Formularios
+        getFormularios() {
             this.showOverlay = true;
             this.muestra_modal = false;
-            let url = "/admin/funcionarios";
+            let url = "/admin/formularios";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
@@ -289,11 +397,11 @@ export default {
                 })
                 .then((res) => {
                     this.showOverlay = false;
-                    this.listRegistros = res.data.funcionarios;
+                    this.listRegistros = res.data.formularios;
                     this.totalRows = res.data.total;
                 });
         },
-        eliminaFuncionario(id, descripcion) {
+        eliminaFormulario(id, descripcion) {
             Swal.fire({
                 title: "¿Quierés eliminar este registro?",
                 html: `<strong>${descripcion}</strong>`,
@@ -306,11 +414,11 @@ export default {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     axios
-                        .post("/admin/funcionarios/" + id, {
+                        .post("/admin/formularios/" + id, {
                             _method: "DELETE",
                         })
                         .then((res) => {
-                            this.getFuncionarios();
+                            this.getFormularios();
                             this.filter = "";
                             Swal.fire({
                                 icon: "success",
@@ -322,11 +430,11 @@ export default {
                 }
             });
         },
-        abreModal(tipo_accion = "nuevo", funcionario = null) {
+        abreModal(tipo_accion = "nuevo", formulario = null) {
             this.muestra_modal = true;
             this.modal_accion = tipo_accion;
-            if (funcionario) {
-                this.oFuncionario = funcionario;
+            if (formulario) {
+                this.oFormulario = formulario;
             }
         },
         onFiltered(filteredItems) {
@@ -334,14 +442,17 @@ export default {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
-        limpiaFuncionario() {
-            this.oFuncionario.ci = "";
-            this.oFuncionario.nombre = "";
-            this.oFuncionario.paterno = "";
-            this.oFuncionario.materno = "";
-            this.oFuncionario.cargo_id = "";
-            this.oFuncionario.regional_id = "";
-            this.oFuncionario.agencia_id = "";
+        limpiaFormulario() {
+            this.oFormulario.codigo = "";
+            this.oFormulario.fecha_solicitud = "";
+            this.oFormulario.fecha_respuesta = "";
+            this.oFormulario.hora_solicitud = "";
+            this.oFormulario.hora_respuesta = "";
+            this.oFormulario.funcionario_id = "";
+            this.oFormulario.tipo_acceso = "";
+            this.oFormulario.cargo_id = "";
+            this.oFormulario.agencia_origen = "";
+            this.oFormulario.agencia_destino = "";
         },
         formatoFecha(date) {
             return this.$moment(String(date)).format("DD/MM/YYYY");

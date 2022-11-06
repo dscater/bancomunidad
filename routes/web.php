@@ -74,6 +74,7 @@ Route::prefix('admin')->group(function () {
     ]);
 
     // ASIGNACIONS
+    Route::get('asignacions/getAsignacionFuncionario', [AsignacionController::class, "getAsignacionFuncionario"]);
     Route::resource('asignacions', AsignacionController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
     ]);

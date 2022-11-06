@@ -16,10 +16,10 @@ class CreateFormulariosTable extends Migration
         Schema::create('formularios', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("codigo");
-            $table->date("fecha_solicitud");
-            $table->date("fecha_respuesta");
-            $table->time("hora_solicitud");
-            $table->time("hora_respuesta");
+            $table->date("fecha_solicitud")->nullable();
+            $table->date("fecha_respuesta")->nullable();
+            $table->time("hora_solicitud")->nullable();
+            $table->time("hora_respuesta")->nullable();
             $table->unsignedBigInteger("funcionario_id");
             $table->string("tipo_acceso", 255);
             $table->unsignedBigInteger("cargo_id")->nullable();

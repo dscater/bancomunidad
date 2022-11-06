@@ -89,8 +89,11 @@
                                             </thead>
                                             <tbody>
                                                 <Acceso
-                                                    v-for="perfil_sistema,index in listPerfilSistema"
+                                                    v-for="(
+                                                        perfil_sistema, index
+                                                    ) in listPerfilSistema"
                                                     :key="index"
+                                                    :sistema_id="sistema_id"
                                                     :perfil_sistema="
                                                         perfil_sistema
                                                     "
