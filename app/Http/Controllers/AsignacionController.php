@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asignacion;
+use App\Models\Sistema;
 use Illuminate\Http\Request;
 
 class AsignacionController extends Controller
@@ -81,5 +82,23 @@ class AsignacionController extends Controller
             }
         }
         return response()->JSON(false);
+    }
+
+    public function getEstadoAsignacion(Request $request)
+    {
+        $sistema = Sistema::find($request->sistema_id);
+
+        $total_perfiles = count($sistema->perfiles);
+
+        $asignaciones_funcionario = count(Asignacion::where("funcionario_id", $request->funcionario_id)
+            ->join("asignacion_detalles", "asignacion_detalles.asignacion_id", "=", "asignacions.id")
+            ->where("sistema_id", $request->sistema_id)->get());
+
+        $estado = $total_perfiles == $asignaciones_funcionario ? 'CORRECTO' : 'PENDIENTE';
+        return response()->JSON([
+            "estado" => $estado,
+            "total_perfiles" => $total_perfiles,
+            "asignaciones_funcionario" => $asignaciones_funcionario,
+        ]);
     }
 }

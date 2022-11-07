@@ -37,4 +37,9 @@ class Funcionario extends Model
     {
         return $this->belongsTo(Agencia::class, 'agencia_id');
     }
+
+    public function acceso_sistemas()
+    {
+        return $this->hasMany(AccesoSistema::class, 'funcionario_id');
+    }
 }

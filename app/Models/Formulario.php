@@ -14,7 +14,7 @@ class Formulario extends Model
         "tipo_acceso", "cargo_id", "agencia_origen", "agencia_destino", "fecha_registro",
     ];
 
-    protected $with = ["cargo", "funcionario", "agencia_origen", "agencia_destino"];
+    protected $with = ["cargo", "funcionario", "origen", "destino"];
 
     public function funcionario()
     {
@@ -26,12 +26,12 @@ class Formulario extends Model
         return $this->belongsTo(Cargo::class, 'cargo_id');
     }
 
-    public function agencia_origen()
+    public function origen()
     {
         return $this->belongsTo(Agencia::class, 'agencia_origen');
     }
 
-    public function agencia_destino()
+    public function destino()
     {
         return $this->belongsTo(Agencia::class, 'agencia_destino');
     }

@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Reportes - Lista de Usuarios</h1>
+                        <h1>Reportes - Seguridad de la Información</h1>
                     </div>
                 </div>
             </div>
@@ -50,90 +50,6 @@
                                                     v-text="errors.filtro[0]"
                                                 ></span>
                                             </div>
-                                            <div
-                                                class="form-group col-md-12"
-                                                v-if="
-                                                    oReporte.filtro ==
-                                                    'Tipo de usuario'
-                                                "
-                                            >
-                                                <label
-                                                    :class="{
-                                                        'text-danger':
-                                                            errors.filtro,
-                                                    }"
-                                                    >Seleccione*</label
-                                                >
-                                                <el-select
-                                                    v-model="oReporte.tipo"
-                                                    filterable
-                                                    placeholder="Seleccione"
-                                                    class="d-block"
-                                                    :class="{
-                                                        'is-invalid':
-                                                            errors.tipo,
-                                                    }"
-                                                >
-                                                    <el-option
-                                                        v-for="item in listTipos"
-                                                        :key="item"
-                                                        :label="item"
-                                                        :value="item"
-                                                    >
-                                                    </el-option>
-                                                </el-select>
-                                                <span
-                                                    class="error invalid-feedback"
-                                                    v-if="errors.tipo"
-                                                    v-text="errors.tipo[0]"
-                                                ></span>
-                                            </div>
-                                            <div
-                                                class="form-group col-md-12"
-                                                v-if="
-                                                    oReporte.filtro ==
-                                                    'Rango de fechas'
-                                                "
-                                            >
-                                                <label
-                                                    :class="{
-                                                        'text-danger':
-                                                            errors.fecha_ini,
-                                                        'text-danger':
-                                                            errors.fecha_fin,
-                                                    }"
-                                                    >Indice un rango de
-                                                    fechas*</label
-                                                >
-                                                <el-date-picker
-                                                    class="w-full d-block"
-                                                    :class="{
-                                                        'is-invalid':
-                                                            errors.fecha_ini,
-                                                        'is-invalid':
-                                                            errors.fecha_fin,
-                                                    }"
-                                                    v-model="aFechas"
-                                                    type="daterange"
-                                                    range-separator="a"
-                                                    start-placeholder="Fecha Inicial"
-                                                    end-placeholder="Fecha Final"
-                                                    format="dd/MM/yyyy"
-                                                    value-format="yyyy-MM-dd"
-                                                    @change="obtieneFechas()"
-                                                >
-                                                </el-date-picker>
-                                                <span
-                                                    class="error invalid-feedback"
-                                                    v-if="errors.fecha_ini"
-                                                    v-text="errors.fecha_ini[0]"
-                                                ></span>
-                                                <span
-                                                    class="error invalid-feedback"
-                                                    v-if="errors.fecha_fin"
-                                                    v-text="errors.fecha_fin[0]"
-                                                ></span>
-                                            </div>
                                         </div>
                                     </form>
                                     <div class="row">
@@ -171,7 +87,7 @@ export default {
         return {
             errors: [],
             oReporte: {
-                filtro: "Todos",
+                filtro: "Nombre del funcionario los sistemas y los perfiles",
                 tipo: "",
                 fecha_ini: "",
                 fecha_fin: "",
@@ -179,15 +95,17 @@ export default {
             aFechas: [],
             enviando: false,
             textoBtn: "Generar Reporte",
-            listFiltro: ["Todos", "Tipo de usuario"],
-            listTipos: ["ADMINISTRADOR", "AUXILIAR"],
+            listFiltro: [
+                "Nombre del funcionario los sistemas y los perfiles",
+                "Sistema y perfiles del sistema",
+            ],
             errors: [],
             listUnidades: [],
         };
     },
     methods: {
         limpiarFormulario() {
-            this.oReporte.filtro = "Todos";
+            this.oReporte.filtro = "Nombre del funcionario los sistemas y los perfiles";
         },
         generaReporte() {
             this.enviando = true;
@@ -195,7 +113,7 @@ export default {
                 responseType: "blob",
             };
             axios
-                .post("/admin/reportes/usuarios", this.oReporte, config)
+                .post("/admin/reportes/funcionario_sistemas", this.oReporte, config)
                 .then((res) => {
                     this.errors = [];
                     this.enviando = false;

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Formulario;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class FormularioController extends Controller
 {
@@ -108,5 +110,143 @@ class FormularioController extends Controller
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'
         ], 200);
+    }
+
+    public function excel()
+    {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()
+            ->setCreator("ADMIN")
+            ->setLastModifiedBy('Administración')
+            ->setTitle('Formularios')
+            ->setSubject('Formularios')
+            ->setDescription('Formularios')
+            ->setKeywords('PHPSpreadsheet')
+            ->setCategory('Listado');
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $spreadsheet->getDefaultStyle()->getFont()->setName('Arial');
+
+        $styleTexto = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+                'size' => 9,
+                'color' => ['argb' => 'ffffff'],
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'color' => ['rgb' => '80B900']
+            ],
+        ];
+
+        $estilo_conenido = [
+            'font' => [
+                'size' => 8,
+            ],
+            'alignment' => [
+                // 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+        ];
+
+        $fila = 1;
+
+        $sheet->setCellValue('A' . $fila, 'FORMULARIOS');
+        $sheet->getStyle('A' . $fila . ':K' . $fila)->getAlignment()->setHorizontal('center');;
+        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleTexto);
+        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
+        $fila++;
+        $sheet->setCellValue('A' . $fila, 'EXPEDIDO: ' . date('Y-m-d'));
+        $sheet->getStyle('A' . $fila . ':K' . $fila)->getAlignment()->setHorizontal('center');;
+        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
+        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleTexto);
+        $fila++;
+
+        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
+        $fila++;
+
+        // ENCABEZADO
+        $sheet->setCellValue('A' . $fila, 'CÓDIGO');
+        $sheet->setCellValue('B' . $fila, 'FECHA DE SOLICITUD');
+        $sheet->setCellValue('C' . $fila, 'FECHA DE RESPUESTA');
+        $sheet->setCellValue('D' . $fila, 'HORA DE SOLICITUD');
+        $sheet->setCellValue('E' . $fila, 'HORA DE RESPUESTA');
+        $sheet->setCellValue('F' . $fila, 'FUNCIONARIO');
+        $sheet->setCellValue('G' . $fila, 'TIPO DE ACCESO');
+        $sheet->setCellValue('H' . $fila, 'AGENCIA ORIGEN');
+        $sheet->setCellValue('I' . $fila, 'AGENCIA DESTINO');
+        $sheet->setCellValue('J' . $fila, 'CARGO');
+        $sheet->setCellValue('K' . $fila, 'FECHA DE REGISTRO');
+        // $sheet->setWidth(['A' =>  5, 'B' =>  10, 'C' => 10, 'D' => 10, 'E' => 10, 'F' => 10, 'G' => 10, 'H' => 10, 'I' => 10, 'k' => 10, 'K' => 10, 'L' => 10, 'M' => 10, 'N' => 10, 'O' => 10, 'P' => 10, 'Q' => 10, 'R' => 10, 'S' => 10]);
+        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleArray);
+        $fila++;
+
+        $cont = 1;
+        $formularios = Formulario::all();
+        foreach ($formularios as $formulario) {
+            $sheet->setCellValue('A' . $fila, $formulario->codigo);
+            $sheet->setCellValue('B' . $fila, $formulario->fecha_solicitud ? date("d/m/Y", strtotime($formulario->fecha_solicitud)) : "");
+            $sheet->setCellValue('C' . $fila, $formulario->fecha_respuesta ? date("d/m/Y", strtotime($formulario->fecha_respuesta)) : "");
+            $sheet->setCellValue('D' . $fila, $formulario->hora_solicitud);
+            $sheet->setCellValue('E' . $fila, $formulario->hora_respuesta);
+            $sheet->setCellValue('F' . $fila, $formulario->funcionario->full_name);
+            $sheet->setCellValue('G' . $fila, $formulario->tipo_acceso);
+            if ($formulario->tipo_acceso == 'CAMBIO DE AGENCIA') {
+                $sheet->setCellValue('H' . $fila, $formulario->origen->nombre);
+                $sheet->setCellValue('I' . $fila, $formulario->destino->nombre);
+            } else {
+                $sheet->setCellValue('J' . $fila, $formulario->cargo->nombre);
+            }
+            $sheet->setCellValue('K' . $fila, date("d/m/Y", strtotime($formulario->fecha_registro)));
+
+            $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($estilo_conenido);
+            $fila++;
+        }
+
+        // $sheet->getRowDimension(6)->setRowHeight(-1);
+        // AJUSTAR EL ANCHO DE LAS CELDAS
+        foreach (range('A', 'K') as $columnID) {
+            $sheet->getStyle($columnID)->getAlignment()->setWrapText(true);
+            $sheet->getColumnDimension($columnID)
+                ->setAutoSize(true);
+            if ($columnID == 'K') {
+            } else {
+                // $sheet->getColumnDimension($columnID)
+                //     ->setAutoSize(true);
+            }
+        }
+
+        // DESCARGA DEL ARCHIVO
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Usuarios.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
     }
 }

@@ -33,6 +33,15 @@
                                             Nuevo
                                         </button>
                                     </div>
+                                    <div class="col-md-3">
+                                        <button
+                                            class="btn btn-outline-primary bg-success btn-flat btn-block"
+                                            @click="excel()"
+                                        >
+                                            <i class="fa fa-file-excel"></i>
+                                            Exportar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -106,8 +115,7 @@
                                                             <strong
                                                                 >Agencia origen: </strong
                                                             ><br />{{
-                                                                row.item
-                                                                    .agencia_origen
+                                                                row.item.origen
                                                                     .nombre
                                                             }}
                                                         </p>
@@ -116,8 +124,7 @@
                                                                 >Agencia
                                                                 destino: </strong
                                                             ><br />{{
-                                                                row.item
-                                                                    .agencia_destino
+                                                                row.item.destino
                                                                     .nombre
                                                             }}
                                                         </p>
@@ -192,7 +199,8 @@
                                                                         .full_name +
                                                                         ' <br/><small>' +
                                                                         row.item
-                                                                            .tipo_acceso +'</small>'
+                                                                            .tipo_acceso +
+                                                                        '</small>'
                                                                 )
                                                             "
                                                         >
@@ -381,6 +389,36 @@ export default {
 
             this.modal_accion = "edit";
             this.muestra_modal = true;
+        },
+        excel() {
+            let config = {
+                responseType: "blob",
+            };
+            axios
+                .post("/admin/formularios/excel", null, config)
+                .then((response) => {
+                    console.log(response);
+                    let nom =
+                        response.headers["content-disposition"].split("=");
+                    var fileURL = window.URL.createObjectURL(
+                        new Blob([response.data])
+                    );
+                    var fileLink = document.createElement("a");
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute("download", "formularios.xlsx");
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                })
+                .catch(async (error) => {
+                    console.log(error);
+                    let responseObj = await error.response.data.text();
+                    responseObj = JSON.parse(responseObj);
+                    this.enviando = false;
+                    if (error.response) {
+                    }
+                });
         },
 
         // Listar Formularios

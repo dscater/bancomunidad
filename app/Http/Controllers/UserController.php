@@ -66,7 +66,6 @@ class UserController extends Controller
             'controls.index',
 
             'reportes.funcionario_sistemas',
-            'reportes.sistema_perfiles',
         ],
         'SISTEMAS' => [
             'acceso_sistemas.index',

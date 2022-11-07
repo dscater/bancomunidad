@@ -13,4 +13,9 @@ class Sistema extends Model
         "nombre", "objetivo", "version", "tipo",
         "fecha_produccion", "empresa_proveedora", "fecha_registro",
     ];
+
+    public function perfiles()
+    {
+        return $this->hasMany(PerfilSistema::class, 'sistema_id');
+    }
 }

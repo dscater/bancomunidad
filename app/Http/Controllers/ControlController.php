@@ -12,4 +12,8 @@ class ControlController extends Controller
         $funcionarios = Funcionario::all();
         return response()->JSON(['funcionarios' => $funcionarios, 'total' => count($funcionarios)], 200);
     }
+
+    public function acceso(){
+        
+    }
 }

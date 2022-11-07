@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 06-11-2022 a las 15:31:53
+-- Tiempo de generación: 07-11-2022 a las 17:52:45
 -- Versión del servidor: 5.7.33
 -- Versión de PHP: 7.4.19
 
@@ -34,6 +34,15 @@ CREATE TABLE `acceso_sistemas` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `acceso_sistemas`
+--
+
+INSERT INTO `acceso_sistemas` (`id`, `funcionario_id`, `sistema_id`, `created_at`, `updated_at`) VALUES
+(3, 3, 1, '2022-11-07 17:12:59', '2022-11-07 17:12:59'),
+(7, 1, 1, '2022-11-07 17:24:04', '2022-11-07 17:24:04'),
+(8, 1, 3, '2022-11-07 17:26:52', '2022-11-07 17:26:52');
 
 -- --------------------------------------------------------
 
@@ -80,7 +89,8 @@ CREATE TABLE `asignacions` (
 INSERT INTO `asignacions` (`id`, `funcionario_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, '2022-11-06', '2022-11-06 13:55:51', '2022-11-06 13:55:51'),
 (2, 1, 3, '2022-11-06', '2022-11-06 14:03:50', '2022-11-06 14:03:50'),
-(3, 3, 1, '2022-11-06', '2022-11-06 14:14:24', '2022-11-06 14:14:24');
+(3, 3, 1, '2022-11-06', '2022-11-06 14:14:24', '2022-11-06 14:14:24'),
+(4, 3, 3, '2022-11-07', '2022-11-07 15:34:13', '2022-11-07 15:34:13');
 
 -- --------------------------------------------------------
 
@@ -103,7 +113,8 @@ CREATE TABLE `asignacion_detalles` (
 INSERT INTO `asignacion_detalles` (`id`, `asignacion_id`, `perfil_id`, `created_at`, `updated_at`) VALUES
 (10, 1, 3, '2022-11-06 14:15:49', '2022-11-06 14:15:49'),
 (12, 2, 6, '2022-11-06 15:30:20', '2022-11-06 15:30:20'),
-(13, 2, 5, '2022-11-06 15:30:39', '2022-11-06 15:30:39');
+(13, 2, 5, '2022-11-06 15:30:39', '2022-11-06 15:30:39'),
+(14, 4, 5, '2022-11-07 15:34:13', '2022-11-07 15:34:13');
 
 -- --------------------------------------------------------
 
@@ -471,7 +482,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `acceso_sistemas`
 --
 ALTER TABLE `acceso_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `agencias`
@@ -483,13 +494,13 @@ ALTER TABLE `agencias`
 -- AUTO_INCREMENT de la tabla `asignacions`
 --
 ALTER TABLE `asignacions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_detalles`
 --
 ALTER TABLE `asignacion_detalles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`

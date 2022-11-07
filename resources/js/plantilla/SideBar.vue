@@ -66,12 +66,12 @@
                             permisos.includes('agencias.index') ||
                             permisos.includes('regionals.index') ||
                             permisos.includes('cargos.index') ||
-                            permisos.includes('sistemas.index') ||
-                            permisos.includes('perfil_sistemas.index') ||
-                            permisos.includes('asignacions.index') ||
+                            (permisos.includes('sistemas.index') &&
+                                user.tipo != 'SISTEMAS') ||
+                            (permisos.includes('perfil_sistemas.index') &&
+                                user.tipo != 'SISTEMAS') ||
                             permisos.includes('formularios.index') ||
-                            permisos.includes('controls.index') ||
-                            permisos.includes('acceso_sistemas.index')
+                            permisos.includes('controls.index')
                         "
                     >
                         ADMINISTRACIÓN
@@ -134,7 +134,10 @@
                     </li>
                     <li
                         class="nav-item"
-                        v-if="permisos.includes('sistemas.index')"
+                        v-if="
+                            permisos.includes('sistemas.index') &&
+                            user.tipo != 'SISTEMAS'
+                        "
                     >
                         <router-link
                             exact
@@ -162,20 +165,6 @@
                     </li>
                     <li
                         class="nav-item"
-                        v-if="permisos.includes('asignacions.index')"
-                    >
-                        <router-link
-                            exact
-                            :to="{ name: 'asignacions.index' }"
-                            class="nav-link"
-                            v-loading.fullscreen.lock="fullscreenLoading"
-                        >
-                            <i class="nav-icon fas fa-check-square"></i>
-                            <p>Asignación</p>
-                        </router-link>
-                    </li>
-                    <li
-                        class="nav-item"
                         v-if="permisos.includes('formularios.index')"
                     >
                         <router-link
@@ -188,7 +177,7 @@
                             <p>Formulario</p>
                         </router-link>
                     </li>
-                    
+
                     <li
                         class="nav-item"
                         v-if="permisos.includes('controls.index')"
@@ -201,20 +190,6 @@
                         >
                             <i class="nav-icon fas fa-list-alt"></i>
                             <p>Control</p>
-                        </router-link>
-                    </li>
-                    <li
-                        class="nav-item"
-                        v-if="permisos.includes('acceso_sistemas.index')"
-                    >
-                        <router-link
-                            exact
-                            :to="{ name: 'acceso_sistemas.index' }"
-                            class="nav-link"
-                            v-loading.fullscreen.lock="fullscreenLoading"
-                        >
-                            <i class="nav-icon fas fa-list-alt"></i>
-                            <p>Acceso a Sistema</p>
                         </router-link>
                     </li>
                     <li
@@ -234,34 +209,64 @@
                     <li
                         class="nav-header"
                         v-if="
-                            permisos.includes('reportes.usuarios') ||
-                            permisos.includes('reportes.maestro_registro') ||
-                            permisos.includes(
-                                'reportes.seguimiento_tramites'
-                            ) ||
-                            permisos.includes(
-                                'reportes.seguimiento_aprobados'
-                            ) ||
-                            permisos.includes(
-                                'reportes.seguimiento_rectificaciones'
-                            )
+                            permisos.includes('asignacions.index') ||
+                            permisos.includes('acceso_sistemas.index')
+                        "
+                    >
+                        ACCESOS
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="permisos.includes('asignacions.index')"
+                    >
+                        <router-link
+                            exact
+                            :to="{ name: 'asignacions.index' }"
+                            class="nav-link"
+                            v-loading.fullscreen.lock="fullscreenLoading"
+                        >
+                            <i class="nav-icon fas fa-check-square"></i>
+                            <p>Asignación</p>
+                        </router-link>
+                    </li>
+
+                    <li
+                        class="nav-item"
+                        v-if="permisos.includes('acceso_sistemas.index')"
+                    >
+                        <router-link
+                            exact
+                            :to="{ name: 'acceso_sistemas.index' }"
+                            class="nav-link"
+                            v-loading.fullscreen.lock="fullscreenLoading"
+                        >
+                            <i class="nav-icon fas fa-list-alt"></i>
+                            <p>Acceso a Sistema</p>
+                        </router-link>
+                    </li>
+                    <li
+                        class="nav-header"
+                        v-if="
+                            permisos.includes('reportes.funcionario_sistemas')
                         "
                     >
                         REPORTES
                     </li>
                     <li
                         class="nav-item"
-                        v-if="permisos.includes('reportes.usuarios')"
+                        v-if="
+                            permisos.includes('reportes.funcionario_sistemas')
+                        "
                     >
                         <router-link
-                            :to="{ name: 'reportes.usuarios' }"
+                            :to="{ name: 'reportes.funcionario_sistemas' }"
                             class="nav-link"
                         >
                             <i class="fas fa-file-pdf nav-icon"></i>
-                            <p>Lista de Usuarios</p>
+                            <p>Reporte</p>
                         </router-link>
                     </li>
-                    <li class="nav-header">SALIR</li>
+                    <li class="nav-header">OTROS</li>
                     <li class="nav-item">
                         <a
                             href="#"
@@ -270,7 +275,7 @@
                             v-loading.fullscreen.lock="fullscreenLoading"
                         >
                             <i class="fas fa-power-off nav-icon"></i>
-                            <p>Cerrar sesión</p>
+                            <p>Salir</p>
                         </a>
                     </li>
                 </ul>

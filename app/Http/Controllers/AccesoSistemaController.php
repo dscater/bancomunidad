@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccesoSistema;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 
 class AccesoSistemaController extends Controller
@@ -19,11 +20,28 @@ class AccesoSistemaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate($this->validacion, $this->mensajes);
-        $acceso_sistema = AccesoSistema::create(array_map('mb_strtoupper', $request->all()));
+
+        $acceso_sistema = AccesoSistema::where("funcionario_id", $request->funcionario_id)
+            ->where("sistema_id", $request->sistema_id)
+            ->get()->first();
+        $acceso = false;
+        if (!$acceso_sistema) {
+            $acceso_sistema = AccesoSistema::create([
+                "funcionario_id" => $request->funcionario_id,
+                "sistema_id" => $request->sistema_id,
+            ]);
+            $acceso = true;
+            Usuario::query()->update(["acceso" => 1]);
+        } else {
+            $acceso_sistema->delete();
+            $acceso = false;
+            Usuario::query()->update(["acceso" => 0]);
+        }
+
         return response()->JSON([
             'sw' => true,
             'acceso_sistema' => $acceso_sistema,
+            'acceso' => $acceso,
             'msj' => 'El registro se realizó de forma correcta',
         ], 200);
     }
@@ -51,5 +69,17 @@ class AccesoSistemaController extends Controller
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'
         ], 200);
+    }
+
+    public function getAccesoSistema(Request $request)
+    {
+        $existe = AccesoSistema::where("funcionario_id", $request->funcionario_id)
+            ->where("sistema_id", $request->sistema_id)
+            ->get()->first();
+
+        if ($existe) {
+            return response()->JSON(true);
+        }
+        return response()->JSON(false);
     }
 }

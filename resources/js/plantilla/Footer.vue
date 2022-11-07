@@ -1,12 +1,12 @@
 <template>
     <div>
-        <footer class="main-footer">
+        <footer class="main-footer bg-primary">
             <div class="float-right d-none d-sm-block">
                 <b>Versión</b> 1.0.0
             </div>
             <strong
                 >Copyright &copy; {{ fechaActual }}
-                <router-link :to="{ name: 'inicio' }">BANCOMUNIDAD</router-link
+                <router-link :to="{ name: 'inicio' }" class="text-white">BANCOMUNIDAD</router-link
                 >.</strong
             >
             Todos los derechos reservados.

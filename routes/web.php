@@ -75,6 +75,7 @@ Route::prefix('admin')->group(function () {
 
     // ASIGNACIONS
     Route::get('asignacions/getAsignacionFuncionario', [AsignacionController::class, "getAsignacionFuncionario"]);
+    Route::get('asignacions/getEstadoAsignacion', [AsignacionController::class, "getEstadoAsignacion"]);
     Route::resource('asignacions', AsignacionController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
     ]);
@@ -85,18 +86,19 @@ Route::prefix('admin')->group(function () {
     ]);
 
     // ACCESO SISTEMA
+    Route::get('acceso_sistemas/getAccesoSistema', [AccesoSistemaController::class, "getAccesoSistema"]);
     Route::resource('acceso_sistemas', AccesoSistemaController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
     ]);
 
     // FORMULARIOS
+    Route::post('formularios/excel', [FormularioController::class, "excel"]);
     Route::resource('formularios', FormularioController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
     ]);
 
     // REPORTES
     Route::post('reportes/funcionario_sistemas', [ReporteController::class, 'funcionario_sistemas']);
-    Route::post('reportes/sistema_perfiles', [ReporteController::class, 'sistema_perfiles']);
 });
 
 // ---------------------------------------

@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Usuarios</title>
+    <title>FuncionarioSistemasPerfiles</title>
     <style type="text/css">
         * {
             font-family: sans-serif;
         }
 
         @page {
-            margin-top: 2cm;
+            margin-top: 1.5cm;
             margin-bottom: 1cm;
             margin-left: 1.5cm;
             margin-right: 1cm;
@@ -21,7 +21,7 @@
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            margin-top: 20px;
+            margin-top: 3px;
         }
 
         table thead tr th,
@@ -52,10 +52,10 @@
         }
 
         .texto {
-            width: 250px;
+            width: 400px;
             text-align: center;
             margin: auto;
-            margin-top: 15px;
+            margin-top: 0;
             font-weight: bold;
             font-size: 1.1em;
         }
@@ -85,12 +85,13 @@
 
         table thead tr th {
             padding: 3px;
-            font-size: 0.7em;
+            font-size: 0.75em;
+            text-align: left;
         }
 
         table tbody tr td {
             padding: 3px;
-            font-size: 0.55em;
+            font-size: 0.7em;
         }
 
         table tbody tr td.franco {
@@ -146,59 +147,66 @@
         .img_celda img {
             width: 45px;
         }
+
+        .funcionario {
+            font-size: 0.8em;
+            margin-bottom: 0px;
+        }
     </style>
 </head>
 
 <body>
-    @inject('configuracion', 'App\Models\Configuracion')
+    @inject('o_Asignacion', 'App\Models\Asignacion')
+    @inject('o_AsignacionDetalle', 'App\Models\AsignacionDetalle')
     <div class="encabezado">
-        <div class="logo">
-            <img src="{{ asset('imgs/' . $configuracion->first()->logo) }}">
-        </div>
-        <h2 class="titulo">
-            {{ $configuracion->first()->razon_social }}
-        </h2>
-        <h4 class="texto">LISTA DE USUARIOS</h4>
+        <h4 class="texto">FUNCIONARIO LOS SISTEMAS Y PERFILES</h4>
         <h4 class="fecha">Expedido: {{ date('d-m-Y') }}</h4>
     </div>
-    <table border="1">
-        <thead>
-            <tr>
-                <th width="5%">Foto</th>
-                <th width="5%">Usuario</th>
-                <th>Nombre(s) y apellidos</th>
-                <th width="5%">C.I.</th>
-                <th>Dirección</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>Celular</th>
-                <th>Cargo</th>
-                <th>Tipo de Usuario</th>
-                <th>Fecha Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $cont = 1;
-            @endphp
-            @foreach ($usuarios as $user)
+    @foreach ($funcionarios as $funcionario)
+        <p class="funcionario"><strong>Nombre del funcionario:</strong> {{ $funcionario->full_name }}</p>
+        <table border="1">
+            <thead>
                 <tr>
-                    <td class="img_celda"><img src="{{ asset('imgs/users/' . $user->foto) }}"
-                            alt="Foto"></td>
-                    <td>{{ $user->usuario }}</td>
-                    <td>{{ $user->full_name }}</td>
-                    <td>{{ $user->ci }} {{ $user->ci_exp }}</td>
-                    <td>{{ $user->dir }}</td>
-                    <td>{{ $user->correo }}</td>
-                    <td>{{ $user->fono }}</td>
-                    <td>{{ $user->cel }}</td>
-                    <td>{{ $user->cargo }}</td>
-                    <td>{{ $user->tipo }}</td>
-                    <td>{{ $user->fecha_registro }}</td>
+                    <th class="centreado">Nombre del sistema</th>
+                    <th class="centreado">Perfiles</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($funcionario->acceso_sistemas as $acceso_sistema)
+                    @php
+                        $existe = $o_Asignacion
+                            ->where('funcionario_id', $funcionario->id)
+                            ->where('sistema_id', $acceso_sistema->sistema_id)
+                            ->get()
+                            ->first();
+                    @endphp
+                    <tr>
+                        <td>{{ $acceso_sistema->sistema->nombre }}</td>
+                        <td>
+                            <ol>
+                                @foreach ($acceso_sistema->sistema->perfiles as $perfil)
+                                    @php
+                                        $acceso = 'NO';
+                                        if ($existe) {
+                                            $existe_acceso = $o_AsignacionDetalle
+                                                ->where('asignacion_id', $existe->id)
+                                                ->where('perfil_id', $perfil->perfil_id)
+                                                ->get()
+                                                ->first();
+                                            if ($existe_acceso) {
+                                                $acceso = 'SI';
+                                            }
+                                        }
+                                    @endphp
+                                    <li>{{ $perfil->perfil->nombre }} <strong>({{ $acceso }})</strong></li>
+                                @endforeach
+                            </ol>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endforeach
 </body>
 
 </html>
