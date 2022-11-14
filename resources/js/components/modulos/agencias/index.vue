@@ -12,69 +12,29 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header bg-success">
+                            <div class="card-header">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <h4 v-html="textoTitulo"></h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label
-                                            :class="{
-                                                'text-danger': errors.nombre,
-                                            }"
-                                            >Nombre*</label
-                                        >
-                                        <el-input
-                                            placeholder="Nombre"
-                                            :class="{
-                                                'is-invalid': errors.nombre,
-                                            }"
-                                            v-model="oAgencia.nombre"
-                                            @keypress.enter.native="
-                                                enviarRegistro
-                                            "
-                                            clearable
-                                            maxlength="155"
-                                            show-word-limit
-                                        >
-                                        </el-input>
-                                        <span
-                                            class="error invalid-feedback"
-                                            v-if="errors.nombre"
-                                            v-text="errors.nombre[0]"
-                                        ></span>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <button
-                                            type="button"
-                                            class="btn btn-outline-light btn-block"
-                                            data-dismiss="modal"
-                                            @click="limpiaAgencia"
+                                            v-if="
+                                                permisos.includes(
+                                                    'agencias.create'
+                                                )
+                                            "
+                                            class="btn btn-outline-primary bg-primary btn-flat btn-block"
+                                            @click="
+                                                abreModal('nuevo');
+                                                limpiaAgencia();
+                                            "
                                         >
-                                            Reiniciar
+                                            <i class="fa fa-plus"></i>
+                                            Nuevo
                                         </button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <el-button
-                                            type="primary"
-                                            class="bg-primary w-100"
-                                            :loading="enviando"
-                                            @click="enviarRegistro()"
-                                            >{{ textoBoton }}</el-button
-                                        >
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card border-primary">
                             <div class="card-body">
                                 <div class="row">
                                     <b-col lg="10" class="my-1">
@@ -96,6 +56,8 @@
 
                                                 <b-input-group-append>
                                                     <b-button
+                                                        class="bg-primary"
+                                                        variant="primary"
                                                         :disabled="!filter"
                                                         @click="filter = ''"
                                                         >Borrar</b-button
@@ -114,7 +76,6 @@
                                                 :items="listRegistros"
                                                 show-empty
                                                 stacked="md"
-                                                thead-class="bg-primary"
                                                 responsive
                                                 :current-page="currentPage"
                                                 :per-page="perPage"
@@ -123,6 +84,17 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template
+                                                    #cell(fecha_registro)="row"
+                                                >
+                                                    {{
+                                                        formatoFecha(
+                                                            row.item
+                                                                .fecha_registro
+                                                        )
+                                                    }}
+                                                </template>
+
                                                 <template #cell(accion)="row">
                                                     <div
                                                         class="row justify-content-between"
@@ -153,7 +125,7 @@
                                                                 eliminaAgencia(
                                                                     row.item.id,
                                                                     row.item
-                                                                        .nombre
+                                                                        .full_name
                                                                 )
                                                             "
                                                         >
@@ -201,22 +173,34 @@
                 </div>
             </div>
         </section>
+        <Nuevo
+            :muestra_modal="muestra_modal"
+            :accion="modal_accion"
+            :agencia="oAgencia"
+            @close="muestra_modal = false"
+            @envioModal="getAgencias"
+        ></Nuevo>
     </div>
 </template>
 
 <script>
+import Nuevo from "./Nuevo.vue";
 export default {
+    components: {
+        Nuevo,
+    },
     data() {
         return {
             permisos: localStorage.getItem("permisos"),
             search: "",
             listRegistros: [],
-            errors: [],
             showOverlay: false,
-            accion: "nuevo",
-            enviando: false,
             fields: [
-                { key: "id", label: "Cód.", sortable: true },
+                {
+                    key: "id",
+                    label: "Cód.",
+                    sortable: true,
+                },
                 { key: "nombre", label: "Nombre", sortable: true },
                 {
                     key: "fecha_registro",
@@ -230,10 +214,11 @@ export default {
             loadingWindow: Loading.service({
                 fullscreen: this.fullscreenLoading,
             }),
+            muestra_modal: false,
+            modal_accion: "nuevo",
             oAgencia: {
                 id: 0,
                 nombre: "",
-                departamento: "",
             },
             currentPage: 1,
             perPage: 5,
@@ -249,120 +234,39 @@ export default {
             filter: null,
         };
     },
-    computed: {
-        textoBoton() {
-            if (this.accion == "nuevo") {
-                return "Registrar";
-            } else {
-                return "Actualizar";
-            }
-        },
-        textoTitulo() {
-            if (this.accion == "nuevo") {
-                return "AGREGAR REGISTRO";
-            } else {
-                let aux = this.oAgencia.nombre;
-                return (
-                    "MODIFICAR REGISTRO: <strong>" +
-                    this.oAgencia.id +
-                    "</strong>"
-                );
-            }
-        },
-    },
     mounted() {
-        this.loadingWindow.close();
         this.getAgencias();
+        this.loadingWindow.close();
     },
     methods: {
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
-            this.accion = "edit";
             this.oAgencia.id = item.id;
             this.oAgencia.nombre = item.nombre ? item.nombre : "";
+            this.modal_accion = "edit";
+            this.muestra_modal = true;
         },
 
         // Listar Agencias
         getAgencias() {
             this.showOverlay = true;
+            this.muestra_modal = false;
             let url = "/admin/agencias";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
-            axios
-                .get(url, {
-                    params: { per_page: this.per_page },
-                })
-                .then((res) => {
-                    this.showOverlay = false;
-                    this.listRegistros = res.data.agencias;
-                    this.totalRows = res.data.total;
-                });
-        },
-        enviarRegistro() {
-            this.enviando = true;
-            try {
-                this.textoBtn = "Enviando...";
-                let url = "/admin/agencias";
-                let config = {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                };
-                let formdata = new FormData();
-
-                formdata.append(
-                    "nombre",
-                    this.oAgencia.nombre ? this.oAgencia.nombre : ""
-                );
-
-                if (this.accion == "edit") {
-                    url = "/admin/agencias/" + this.oAgencia.id;
-                    formdata.append("_method", "PUT");
-                }
-                axios
-                    .post(url, formdata, config)
-                    .then((res) => {
-                        this.enviando = false;
-                        Swal.fire({
-                            icon: "success",
-                            title: res.data.msj,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        this.limpiaAgencia();
-                        this.getAgencias();
-                        this.errors = [];
-                        if (this.accion == "edit") {
-                            this.textoBtn = "Actualizar";
-                        } else {
-                            this.textoBtn = "Registrar";
-                        }
-                    })
-                    .catch((error) => {
-                        this.enviando = false;
-                        if (this.accion == "edit") {
-                            this.textoBtn = "Actualizar";
-                        } else {
-                            this.textoBtn = "Registrar";
-                        }
-                        if (error.response) {
-                            if (error.response.status === 422) {
-                                this.errors = error.response.data.errors;
-                            }
-                        }
-                    });
-            } catch (e) {
-                this.enviando = false;
-                console.log(e);
-            }
+            axios.get(url).then((res) => {
+                this.showOverlay = false;
+                this.listRegistros = res.data.agencias;
+                this.totalRows = res.data.total;
+            });
         },
         eliminaAgencia(id, descripcion) {
             Swal.fire({
                 title: "¿Quierés eliminar este registro?",
                 html: `<strong>${descripcion}</strong>`,
                 showCancelButton: true,
-                confirmButtonColor: "#05568e",
+                confirmButtonColor: "#dc3545",
                 confirmButtonText: "Si, eliminar",
                 cancelButtonText: "No, cancelar",
                 denyButtonText: `No, cancelar`,
@@ -387,6 +291,8 @@ export default {
             });
         },
         abreModal(tipo_accion = "nuevo", agencia = null) {
+            this.muestra_modal = true;
+            this.modal_accion = tipo_accion;
             if (agencia) {
                 this.oAgencia = agencia;
             }
@@ -398,7 +304,9 @@ export default {
         },
         limpiaAgencia() {
             this.oAgencia.nombre = "";
-            this.accion = "nuevo";
+        },
+        formatoFecha(date) {
+            return this.$moment(String(date)).format("DD/MM/YYYY");
         },
     },
 };

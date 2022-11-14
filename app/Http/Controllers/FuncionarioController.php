@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Funcionario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FuncionarioController extends Controller
 {
@@ -21,7 +22,40 @@ class FuncionarioController extends Controller
 
     public function index(Request $request)
     {
-        $funcionarios = Funcionario::all();
+        $filter_ci = $request->filter_ci;
+        $filter_nombre = $request->filter_nombre;
+        $filter_cargo = $request->filter_cargo;
+        $filter_regional = $request->filter_regional;
+        $filter_agencia = $request->filter_agencia;
+        $filter_fecha = $request->filter_fecha;
+
+        $funcionarios = Funcionario::orderBy("nombre", "asc");
+        if (isset($filter_ci) &&  trim($filter_ci) != "") {
+            $funcionarios->where("ci", "LIKE", "%$filter_ci%");
+        }
+
+        if (isset($filter_nombre) &&  trim($filter_nombre) != "") {
+            $funcionarios->where(DB::raw('CONCAT(nombre, paterno, materno)'), 'LIKE', "%$filter_nombre%");
+        }
+
+        if (isset($filter_cargo) &&  trim($filter_cargo) != "") {
+            $funcionarios->where("cargo_id", $filter_cargo);
+        }
+
+        if (isset($filter_regional) &&  trim($filter_regional) != "") {
+            $funcionarios->where("regional_id", $filter_regional);
+        }
+
+        if (isset($filter_agencia) &&  trim($filter_agencia) != "") {
+            $funcionarios->where("agencia_id", $filter_agencia);
+        }
+
+        if (isset($filter_fecha) &&  trim($filter_fecha) != "") {
+            $funcionarios->where("fecha_registro", $filter_fecha);
+        }
+
+        $funcionarios = $funcionarios->get();
+
         return response()->JSON(['funcionarios' => $funcionarios, 'total' => count($funcionarios)], 200);
     }
 

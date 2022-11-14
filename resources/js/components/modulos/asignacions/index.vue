@@ -25,20 +25,34 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>Funcionario</label>
-                                        <el-select
-                                            v-model="funcionario_id"
-                                            class="d-block"
-                                            filterable
-                                            @change="getCargo"
-                                        >
-                                            <el-option
-                                                v-for="item in listFuncionarios"
-                                                :key="item.id"
-                                                :value="item.id"
-                                                :label="item.full_name"
-                                            >
-                                            </el-option>
-                                        </el-select>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input
+                                                    type="text"
+                                                    class="form-control mb-1"
+                                                    placeholder="C.I."
+                                                    v-model="filter_ci"
+                                                    @keyup="buscaFuncionario"
+                                                />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <el-select
+                                                    placeholder="Funcionario"
+                                                    v-model="funcionario_id"
+                                                    class="d-block"
+                                                    filterable
+                                                    @change="getCargo"
+                                                >
+                                                    <el-option
+                                                        v-for="item in listFuncionarios"
+                                                        :key="item.id"
+                                                        :value="item.id"
+                                                        :label="item.full_name"
+                                                    >
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label>Cargo</label>
@@ -130,6 +144,7 @@ export default {
             cargo: "",
             sistema_id: "",
             listPerfilSistema: [],
+            filter_ci: "",
         };
     },
     mounted() {
@@ -148,6 +163,9 @@ export default {
                 this.cargo = this.listFuncionarios.filter(
                     (item) => item.id == this.funcionario_id
                 )[0].cargo.nombre;
+                this.filter_ci = this.listFuncionarios.filter(
+                    (item) => item.id == this.funcionario_id
+                )[0].ci;
             } else {
                 this.cargo = "";
             }
@@ -166,6 +184,20 @@ export default {
                     });
             } else {
                 this.listPerfilSistema = [];
+            }
+        },
+        buscaFuncionario() {
+            if (this.filter_ci.trim() != "") {
+                let existe = this.listFuncionarios.filter(
+                    (item) => item.ci == this.filter_ci
+                );
+                if (existe.length > 0) {
+                    this.funcionario_id = existe[0].id;
+                } else {
+                    this.funcionario_id = "";
+                }
+            } else {
+                this.funcionario_id = "";
             }
         },
     },

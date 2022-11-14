@@ -12,103 +12,29 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header bg-success">
+                            <div class="card-header">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <h4 v-html="textoTitulo"></h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label
-                                            :class="{
-                                                'text-danger': errors.nombre,
-                                            }"
-                                            >Nombre*</label
-                                        >
-                                        <el-input
-                                            placeholder="Nombre"
-                                            :class="{
-                                                'is-invalid': errors.nombre,
-                                            }"
-                                            v-model="oCargo.nombre"
-                                            @keypress.enter.native="
-                                                enviarRegistro
-                                            "
-                                            clearable
-                                            maxlength="155"
-                                            show-word-limit
-                                        >
-                                        </el-input>
-                                        <span
-                                            class="error invalid-feedback"
-                                            v-if="errors.nombre"
-                                            v-text="errors.nombre[0]"
-                                        ></span>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label
-                                            :class="{
-                                                'text-danger':
-                                                    errors.departamento,
-                                            }"
-                                            >Departamento*</label
-                                        >
-                                        <el-select
-                                            class="d-block w-full"
-                                            :class="{
-                                                'is-invalid':
-                                                    errors.departamento,
-                                            }"
-                                            v-model="oCargo.departamento"
-                                            clearable
-                                            filterable
-                                        >
-                                            <el-option
-                                                v-for="(
-                                                    item, index
-                                                ) in listDepartamentos"
-                                                :key="index"
-                                                :value="item"
-                                                :label="item"
-                                            >
-                                            </el-option>
-                                        </el-select>
-                                        <span
-                                            class="error invalid-feedback"
-                                            v-if="errors.departamento"
-                                            v-text="errors.departamento[0]"
-                                        ></span>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <button
-                                            type="button"
-                                            class="btn btn-outline-light btn-block"
-                                            data-dismiss="modal"
-                                            @click="limpiaCargo"
+                                            v-if="
+                                                permisos.includes(
+                                                    'cargos.create'
+                                                )
+                                            "
+                                            class="btn btn-outline-primary bg-primary btn-flat btn-block"
+                                            @click="
+                                                abreModal('nuevo');
+                                                limpiaCargo();
+                                            "
                                         >
-                                            Reiniciar
+                                            <i class="fa fa-plus"></i>
+                                            Nuevo
                                         </button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <el-button
-                                            type="primary"
-                                            class="bg-primary w-100"
-                                            :loading="enviando"
-                                            @click="enviarRegistro()"
-                                            >{{ textoBoton }}</el-button
-                                        >
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card border-primary">
                             <div class="card-body">
                                 <div class="row">
                                     <b-col lg="10" class="my-1">
@@ -130,6 +56,8 @@
 
                                                 <b-input-group-append>
                                                     <b-button
+                                                        class="bg-primary"
+                                                        variant="primary"
                                                         :disabled="!filter"
                                                         @click="filter = ''"
                                                         >Borrar</b-button
@@ -148,7 +76,6 @@
                                                 :items="listRegistros"
                                                 show-empty
                                                 stacked="md"
-                                                thead-class="bg-primary"
                                                 responsive
                                                 :current-page="currentPage"
                                                 :per-page="perPage"
@@ -157,6 +84,17 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template
+                                                    #cell(fecha_registro)="row"
+                                                >
+                                                    {{
+                                                        formatoFecha(
+                                                            row.item
+                                                                .fecha_registro
+                                                        )
+                                                    }}
+                                                </template>
+
                                                 <template #cell(accion)="row">
                                                     <div
                                                         class="row justify-content-between"
@@ -187,7 +125,7 @@
                                                                 eliminaCargo(
                                                                     row.item.id,
                                                                     row.item
-                                                                        .nombre
+                                                                        .full_name
                                                                 )
                                                             "
                                                         >
@@ -235,22 +173,34 @@
                 </div>
             </div>
         </section>
+        <Nuevo
+            :muestra_modal="muestra_modal"
+            :accion="modal_accion"
+            :cargo="oCargo"
+            @close="muestra_modal = false"
+            @envioModal="getCargos"
+        ></Nuevo>
     </div>
 </template>
 
 <script>
+import Nuevo from "./Nuevo.vue";
 export default {
+    components: {
+        Nuevo,
+    },
     data() {
         return {
             permisos: localStorage.getItem("permisos"),
             search: "",
             listRegistros: [],
-            errors: [],
             showOverlay: false,
-            accion: "nuevo",
-            enviando: false,
             fields: [
-                { key: "id", label: "Cód.", sortable: true },
+                {
+                    key: "id",
+                    label: "Cód.",
+                    sortable: true,
+                },
                 { key: "nombre", label: "Nombre", sortable: true },
                 { key: "departamento", label: "Departamento", sortable: true },
                 {
@@ -265,6 +215,8 @@ export default {
             loadingWindow: Loading.service({
                 fullscreen: this.fullscreenLoading,
             }),
+            muestra_modal: false,
+            modal_accion: "nuevo",
             oCargo: {
                 id: 0,
                 nombre: "",
@@ -282,142 +234,42 @@ export default {
             ],
             totalRows: 10,
             filter: null,
-            listDepartamentos: [
-                "ADM Y RRHH",
-                "AUDITORÍA INTERNA",
-                "COMERCIAL",
-                "FINANZAS Y PLANIFICACIÓN",
-                "GERENCIA GENERAL",
-                "LEGAL",
-                "OPERACIONES",
-                "RIESGOS",
-                "TECNOLOGÍA DE LA INFORMACIÓN",
-                "UNIDAD DE CUMPLIMIENTO",
-            ],
         };
     },
-    computed: {
-        textoBoton() {
-            if (this.accion == "nuevo") {
-                return "Registrar";
-            } else {
-                return "Actualizar";
-            }
-        },
-        textoTitulo() {
-            if (this.accion == "nuevo") {
-                return "AGREGAR REGISTRO";
-            } else {
-                let aux = this.oCargo.nombre;
-                return (
-                    "MODIFICAR REGISTRO: <strong>" +
-                    this.oCargo.id +
-                    "</strong>"
-                );
-            }
-        },
-    },
     mounted() {
-        this.loadingWindow.close();
         this.getCargos();
+        this.loadingWindow.close();
     },
     methods: {
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
-            this.accion = "edit";
             this.oCargo.id = item.id;
             this.oCargo.nombre = item.nombre ? item.nombre : "";
-            this.oCargo.departamento = item.departamento
-                ? item.departamento
-                : "";
+            this.oCargo.departamento = item.departamento ? item.departamento : "";
+            this.modal_accion = "edit";
+            this.muestra_modal = true;
         },
 
         // Listar Cargos
         getCargos() {
             this.showOverlay = true;
+            this.muestra_modal = false;
             let url = "/admin/cargos";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
-            axios
-                .get(url, {
-                    params: { per_page: this.per_page },
-                })
-                .then((res) => {
-                    this.showOverlay = false;
-                    this.listRegistros = res.data.cargos;
-                    this.totalRows = res.data.total;
-                });
-        },
-        enviarRegistro() {
-            this.enviando = true;
-            try {
-                this.textoBtn = "Enviando...";
-                let url = "/admin/cargos";
-                let config = {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                };
-                let formdata = new FormData();
-
-                formdata.append(
-                    "nombre",
-                    this.oCargo.nombre ? this.oCargo.nombre : ""
-                );
-
-                formdata.append(
-                    "departamento",
-                    this.oCargo.departamento ? this.oCargo.departamento : ""
-                );
-
-                if (this.accion == "edit") {
-                    url = "/admin/cargos/" + this.oCargo.id;
-                    formdata.append("_method", "PUT");
-                }
-                axios
-                    .post(url, formdata, config)
-                    .then((res) => {
-                        this.enviando = false;
-                        Swal.fire({
-                            icon: "success",
-                            title: res.data.msj,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        this.limpiaCargo();
-                        this.getCargos();
-                        this.errors = [];
-                        if (this.accion == "edit") {
-                            this.textoBtn = "Actualizar";
-                        } else {
-                            this.textoBtn = "Registrar";
-                        }
-                    })
-                    .catch((error) => {
-                        this.enviando = false;
-                        if (this.accion == "edit") {
-                            this.textoBtn = "Actualizar";
-                        } else {
-                            this.textoBtn = "Registrar";
-                        }
-                        if (error.response) {
-                            if (error.response.status === 422) {
-                                this.errors = error.response.data.errors;
-                            }
-                        }
-                    });
-            } catch (e) {
-                this.enviando = false;
-                console.log(e);
-            }
+            axios.get(url).then((res) => {
+                this.showOverlay = false;
+                this.listRegistros = res.data.cargos;
+                this.totalRows = res.data.total;
+            });
         },
         eliminaCargo(id, descripcion) {
             Swal.fire({
                 title: "¿Quierés eliminar este registro?",
                 html: `<strong>${descripcion}</strong>`,
                 showCancelButton: true,
-                confirmButtonColor: "#05568e",
+                confirmButtonColor: "#dc3545",
                 confirmButtonText: "Si, eliminar",
                 cancelButtonText: "No, cancelar",
                 denyButtonText: `No, cancelar`,
@@ -442,6 +294,8 @@ export default {
             });
         },
         abreModal(tipo_accion = "nuevo", cargo = null) {
+            this.muestra_modal = true;
+            this.modal_accion = tipo_accion;
             if (cargo) {
                 this.oCargo = cargo;
             }
@@ -452,9 +306,12 @@ export default {
             this.currentPage = 1;
         },
         limpiaCargo() {
+            this.oCargo.ci = "";
             this.oCargo.nombre = "";
-            this.oCargo.departamento = "";
-            this.accion = "nuevo";
+            this.cargo.departamento = "";
+        },
+        formatoFecha(date) {
+            return this.$moment(String(date)).format("DD/MM/YYYY");
         },
     },
 };

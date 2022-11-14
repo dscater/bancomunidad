@@ -26,6 +26,35 @@
                             <div class="form-group col-md-12">
                                 <label
                                     :class="{
+                                        'text-danger': errors.sistema_id,
+                                    }"
+                                    >Sistema*</label
+                                >
+                                <el-select
+                                    class="w-100 d-block"
+                                    :class="{
+                                        'is-invalid': errors.sistema_id,
+                                    }"
+                                    v-model="perfil_sistema.sistema_id"
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in listSistemas"
+                                        :key="item.id"
+                                        :value="item.id"
+                                        :label="item.nombre"
+                                    >
+                                    </el-option>
+                                </el-select>
+                                <span
+                                    class="error invalid-feedback"
+                                    v-if="errors.sistema_id"
+                                    v-text="errors.sistema_id[0]"
+                                ></span>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label
+                                    :class="{
                                         'text-danger': errors.perfil_id,
                                     }"
                                     >Nombre Perfil*</label
@@ -133,36 +162,6 @@
                                     class="error invalid-feedback"
                                     v-if="errors.perfil_id"
                                     v-text="errors.perfil_id[0]"
-                                ></span>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <label
-                                    :class="{
-                                        'text-danger': errors.sistema_id,
-                                    }"
-                                    >Sistema*</label
-                                >
-                                <el-select
-                                    class="w-100 d-block"
-                                    :class="{
-                                        'is-invalid': errors.sistema_id,
-                                    }"
-                                    v-model="perfil_sistema.sistema_id"
-                                    clearable
-                                >
-                                    <el-option
-                                        v-for="item in listSistemas"
-                                        :key="item.id"
-                                        :value="item.id"
-                                        :label="item.nombre"
-                                    >
-                                    </el-option>
-                                </el-select>
-                                <span
-                                    class="error invalid-feedback"
-                                    v-if="errors.sistema_id"
-                                    v-text="errors.sistema_id[0]"
                                 ></span>
                             </div>
                         </div>

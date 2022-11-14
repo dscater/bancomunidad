@@ -601,6 +601,22 @@ export default {
                         this.funcionario[modulo.slice(0, -1) + "_id"] =
                             response.data[modulo.slice(0, -1)].id;
                         this.muestraInput(modulo, false);
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                console.log(error.response);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: error.response.data.errors.nombre
+                                        ? error.response.data.errors.nombre[0]
+                                        : "Ocurrió un error intente nuevamente",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                            }
+                        }
                     });
             }
         },

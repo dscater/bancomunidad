@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 class CargoController extends Controller
 {
-    public $validacion = [];
+    public $validacion = [
+        'nombre' => 'required|min:3|unique:cargos,nombre',
+        'departamento' => 'required',
+    ];
 
     public $mensajes = [];
 
@@ -31,6 +34,7 @@ class CargoController extends Controller
 
     public function update(Request $request, Cargo $cargo)
     {
+        $this->validacion['nombre'] = 'required|min:3|unique:cargos,nombre,' . $cargo->id;
         $request->validate($this->validacion, $this->mensajes);
         $cargo->update(array_map('mb_strtoupper', $request->all()));
         return response()->JSON([

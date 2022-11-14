@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class AgenciaController extends Controller
 {
     public $validacion = [
+        'nombre' => 'required|min:3|unique:agencias,nombre',
     ];
 
     public $mensajes = [];
@@ -33,6 +34,7 @@ class AgenciaController extends Controller
 
     public function update(Request $request, Agencia $agencia)
     {
+        $this->validacion['nombre'] = 'required|min:3|unique:agencias,nombre,' . $agencia->id;
         $request->validate($this->validacion, $this->mensajes);
         $agencia->update(array_map('mb_strtoupper', $request->all()));
         return response()->JSON([

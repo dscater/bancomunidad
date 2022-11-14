@@ -37,34 +37,99 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <b-col lg="10" class="my-1">
-                                        <b-form-group
-                                            label="Buscar"
-                                            label-for="filter-input"
-                                            label-cols-sm="3"
-                                            label-align-sm="right"
-                                            label-size="sm"
-                                            class="mb-0"
-                                        >
-                                            <b-input-group size="sm">
-                                                <b-form-input
-                                                    id="filter-input"
-                                                    v-model="filter"
-                                                    type="search"
-                                                    placeholder="Buscar"
-                                                ></b-form-input>
-
-                                                <b-input-group-append>
-                                                    <b-button
-                                                        class="bg-primary"
-                                                        variant="primary"
-                                                        :disabled="!filter"
-                                                        @click="filter = ''"
-                                                        >Borrar</b-button
-                                                    >
-                                                </b-input-group-append>
-                                            </b-input-group>
-                                        </b-form-group>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>C.I.</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="filter_ci"
+                                                @keyup="getFuncionarios"
+                                                placeholder="C.I."
+                                            />
+                                        </div>
+                                    </b-col>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>Nombre</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="filter_nombre"
+                                                @keyup="getFuncionarios"
+                                                placeholder="Nombre"
+                                            />
+                                        </div>
+                                    </b-col>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>Cargo</label>
+                                            <select
+                                                class="form-control"
+                                                v-model="filter_cargo"
+                                                @keyup="getFuncionarios"
+                                                @change="getFuncionarios"
+                                            >
+                                                <option
+                                                    value=""
+                                                    v-for="item in listCargos"
+                                                    :key="item.id"
+                                                    :value="item.id"
+                                                    :label="item.nombre"
+                                                ></option>
+                                            </select>
+                                        </div>
+                                    </b-col>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>Regional</label>
+                                            <select
+                                                class="form-control"
+                                                v-model="filter_regional"
+                                                @keyup="getFuncionarios"
+                                                @change="getFuncionarios"
+                                            >
+                                                <option
+                                                    value=""
+                                                    v-for="item in listRegionals"
+                                                    :key="item.id"
+                                                    :value="item.id"
+                                                    :label="item.nombre"
+                                                ></option>
+                                            </select>
+                                        </div>
+                                    </b-col>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>Agencia</label>
+                                            <select
+                                                class="form-control"
+                                                v-model="filter_agencia"
+                                                @keyup="getFuncionarios"
+                                                @change="getFuncionarios"
+                                            >
+                                                <option
+                                                    value=""
+                                                    v-for="item in listAgencias"
+                                                    :key="item.id"
+                                                    :value="item.id"
+                                                    :label="item.nombre"
+                                                ></option>
+                                            </select>
+                                        </div>
+                                    </b-col>
+                                    <b-col lg="2" class="my-1">
+                                        <div class="form-group text-xs">
+                                            <label>Fecha</label>
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                v-model="filter_fecha"
+                                                @keyup="getFuncionarios"
+                                                @change="getFuncionarios"
+                                                placeholder="Fecha"
+                                            />
+                                        </div>
                                     </b-col>
                                     <div class="col-md-12">
                                         <b-overlay
@@ -253,13 +318,46 @@ export default {
             ],
             totalRows: 10,
             filter: null,
+            listCargos: [],
+            listRegionals: [],
+            listAgencias: [],
+            filter_ci: "",
+            filter_nombre: "",
+            filter_cargo: "",
+            filter_regional: "",
+            filter_agencia: "",
+            filter_fecha: "",
         };
     },
     mounted() {
         this.loadingWindow.close();
         this.getFuncionarios();
+        this.getCargos();
+        this.getRegionals();
+        this.getAgencias();
     },
     methods: {
+        //get Cargos
+        getCargos() {
+            axios.get("/admin/cargos").then((response) => {
+                this.listCargos = response.data.cargos;
+                this.listCargos.unshift({ id: "", nombre: "Todos" });
+            });
+        },
+        //get Regionals
+        getRegionals() {
+            axios.get("/admin/regionals").then((response) => {
+                this.listRegionals = response.data.regionals;
+                this.listRegionals.unshift({ id: "", nombre: "Todos" });
+            });
+        },
+        //get Agencias
+        getAgencias() {
+            axios.get("/admin/agencias").then((response) => {
+                this.listAgencias = response.data.agencias;
+                this.listAgencias.unshift({ id: "", nombre: "Todos" });
+            });
+        },
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
             this.oFuncionario.id = item.id;
@@ -268,8 +366,12 @@ export default {
             this.oFuncionario.paterno = item.paterno ? item.paterno : "";
             this.oFuncionario.materno = item.materno ? item.materno : "";
             this.oFuncionario.cargo_id = item.cargo_id ? item.cargo_id : "";
-            this.oFuncionario.regional_id = item.regional_id ? item.regional_id : "";
-            this.oFuncionario.agencia_id = item.agencia_id ? item.agencia_id : "";
+            this.oFuncionario.regional_id = item.regional_id
+                ? item.regional_id
+                : "";
+            this.oFuncionario.agencia_id = item.agencia_id
+                ? item.agencia_id
+                : "";
 
             this.modal_accion = "edit";
             this.muestra_modal = true;
@@ -285,7 +387,14 @@ export default {
             }
             axios
                 .get(url, {
-                    params: { per_page: this.per_page },
+                    params: {
+                        filter_ci: this.filter_ci,
+                        filter_nombre: this.filter_nombre,
+                        filter_cargo: this.filter_cargo,
+                        filter_regional: this.filter_regional,
+                        filter_agencia: this.filter_agencia,
+                        filter_fecha: this.filter_fecha,
+                    },
                 })
                 .then((res) => {
                     this.showOverlay = false;

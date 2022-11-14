@@ -72,13 +72,13 @@
                                     }"
                                     >Versión*</label
                                 >
-                                <el-input
+                                <input
+                                    type="number"
+                                    class="form-control"
                                     placeholder="Versión"
                                     :class="{ 'is-invalid': errors.version }"
                                     v-model="sistema.version"
-                                    clearable
-                                >
-                                </el-input>
+                                />
                                 <span
                                     class="error invalid-feedback"
                                     v-if="errors.version"
@@ -122,14 +122,19 @@
                                     }"
                                     >Fecha Puesta en Producción*</label
                                 >
-                                <input
+                                <el-date-picker
                                     type="date"
-                                    class="form-control"
+                                    class="w-100"
                                     :class="{
                                         'is-invalid': errors.fecha_produccion,
                                     }"
+                                    placeholder="dd/mm/yyyy"
+                                    format="dd/MM/yyyy"
+                                    value-format="yyyy-MM-dd"
                                     v-model="sistema.fecha_produccion"
-                                />
+                                    :picker-options="pickerOptions"
+                                >
+                                </el-date-picker>
                                 <span
                                     class="error invalid-feedback"
                                     v-if="errors.fecha_produccion"
@@ -139,13 +144,16 @@
                             <div class="form-group col-md-6">
                                 <label
                                     :class="{
-                                        'text-danger': errors.empresa_proveedora,
+                                        'text-danger':
+                                            errors.empresa_proveedora,
                                     }"
                                     >Empresa Proveedora</label
                                 >
                                 <el-input
                                     placeholder="Empresa Proveedora"
-                                    :class="{ 'is-invalid': errors.empresa_proveedora }"
+                                    :class="{
+                                        'is-invalid': errors.empresa_proveedora,
+                                    }"
                                     v-model="sistema.empresa_proveedora"
                                     clearable
                                 >
@@ -238,6 +246,35 @@ export default {
             enviando: false,
             errors: [],
             listTipos: ["EXTERNO", "INTERNO"],
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
+                shortcuts: [
+                    {
+                        text: "Hoy",
+                        onClick(picker) {
+                            picker.$emit("pick", new Date());
+                        },
+                    },
+                    {
+                        text: "Ayer",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            picker.$emit("pick", date);
+                        },
+                    },
+                    {
+                        text: "Hace una semana",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit("pick", date);
+                        },
+                    },
+                ],
+            },
         };
     },
     mounted() {
@@ -340,6 +377,27 @@ export default {
             this.sistema.cargo_id = "";
             this.sistema.regional_id = "";
             this.sistema.agencia_id = "";
+        },
+        fechaActual() {
+            // crea un nuevo objeto `Date`
+            var today = new Date();
+
+            // `getDate()` devuelve el día del mes (del 1 al 31)
+            var day = today.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            // `getMonth()` devuelve el mes (de 0 a 11)
+            var month = today.getMonth() + 1;
+            if (month < 10) {
+                month = "0" + month;
+            }
+
+            // `getFullYear()` devuelve el año completo
+            var year = today.getFullYear();
+
+            // muestra la fecha de hoy en formato `MM/DD/YYYY`
+            return `${year}-${month}-${day}`;
         },
     },
 };

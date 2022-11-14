@@ -2,7 +2,9 @@
     <div class="login-page">
         <div class="login-box">
             <!-- /.login-logo -->
-            <div class="card card-success rounded border border-primary shadow-lg">
+            <div
+                class="card card-success rounded border border-primary shadow-lg"
+            >
                 <div class="card-header text-center bg-primary rounded-0">
                     <router-link :to="{ name: 'login' }" class="h1 text-xl"
                         ><b v-text="empresa"></b
@@ -137,7 +139,11 @@ export default {
 
 <style>
 .login-page {
-    background: var(--principal);
+    background-image: url("/imgs/login.png");
+    background-repeat: no-repeat;
+    /* background-size: 100% 100%; */
+    background-size: cover;
+    background-position: center;
 }
 
 .card {

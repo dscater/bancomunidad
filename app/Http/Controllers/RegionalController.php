@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 class RegionalController extends Controller
 {
-    public $validacion = [];
+    public $validacion = [
+        'nombre' => 'required|min:3|unique:regionals,nombre',
+    ];
 
     public $mensajes = [];
 
@@ -31,6 +33,7 @@ class RegionalController extends Controller
 
     public function update(Request $request, Regional $regional)
     {
+        $this->validacion['nombre'] = 'required|min:3|unique:regionals,nombre,' . $regional->id;
         $request->validate($this->validacion, $this->mensajes);
         $regional->update(array_map('mb_strtoupper', $request->all()));
         return response()->JSON([

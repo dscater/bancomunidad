@@ -68,8 +68,6 @@
                             permisos.includes('cargos.index') ||
                             (permisos.includes('sistemas.index') &&
                                 user.tipo != 'SISTEMAS') ||
-                            (permisos.includes('perfil_sistemas.index') &&
-                                user.tipo != 'SISTEMAS') ||
                             permisos.includes('formularios.index') ||
                             permisos.includes('controls.index')
                         "
@@ -151,20 +149,6 @@
                     </li>
                     <li
                         class="nav-item"
-                        v-if="permisos.includes('perfil_sistemas.index')"
-                    >
-                        <router-link
-                            exact
-                            :to="{ name: 'perfil_sistemas.index' }"
-                            class="nav-link"
-                            v-loading.fullscreen.lock="fullscreenLoading"
-                        >
-                            <i class="nav-icon fas fa-bookmark"></i>
-                            <p>Perfil</p>
-                        </router-link>
-                    </li>
-                    <li
-                        class="nav-item"
                         v-if="permisos.includes('formularios.index')"
                     >
                         <router-link
@@ -174,7 +158,7 @@
                             v-loading.fullscreen.lock="fullscreenLoading"
                         >
                             <i class="nav-icon far fa-clipboard"></i>
-                            <p>Formulario</p>
+                            <p>Formulario FSI-08</p>
                         </router-link>
                     </li>
 
@@ -210,10 +194,26 @@
                         class="nav-header"
                         v-if="
                             permisos.includes('asignacions.index') ||
+                            (permisos.includes('perfil_sistemas.index') &&
+                                user.tipo != 'SISTEMAS') ||
                             permisos.includes('acceso_sistemas.index')
                         "
                     >
                         ACCESOS
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="permisos.includes('perfil_sistemas.index')"
+                    >
+                        <router-link
+                            exact
+                            :to="{ name: 'perfil_sistemas.index' }"
+                            class="nav-link"
+                            v-loading.fullscreen.lock="fullscreenLoading"
+                        >
+                            <i class="nav-icon fas fa-bookmark"></i>
+                            <p>Creación</p>
+                        </router-link>
                     </li>
                     <li
                         class="nav-item"

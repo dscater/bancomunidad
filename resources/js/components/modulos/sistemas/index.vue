@@ -252,7 +252,7 @@ export default {
                 objetivo: "",
                 version: "",
                 tipo: "",
-                fecha_produccion: "",
+                fecha_produccion: this.fechaActual(),
                 empresa_proveedora: "",
             },
             currentPage: 1,
@@ -281,8 +281,12 @@ export default {
             this.oSistema.objetivo = item.objetivo ? item.objetivo : "";
             this.oSistema.version = item.version ? item.version : "";
             this.oSistema.tipo = item.tipo ? item.tipo : "";
-            this.oSistema.fecha_produccion = item.fecha_produccion ? item.fecha_produccion : "";
-            this.oSistema.empresa_proveedora = item.empresa_proveedora ? item.empresa_proveedora : "";
+            this.oSistema.fecha_produccion = item.fecha_produccion
+                ? item.fecha_produccion
+                : "";
+            this.oSistema.empresa_proveedora = item.empresa_proveedora
+                ? item.empresa_proveedora
+                : "";
 
             this.modal_accion = "edit";
             this.muestra_modal = true;
@@ -351,11 +355,32 @@ export default {
             this.oSistema.objetivo = "";
             this.oSistema.version = "";
             this.oSistema.tipo = "";
-            this.oSistema.fecha_produccion = "";
+            this.oSistema.fecha_produccion = this.fechaActual();
             this.oSistema.empresa_proveedora = "";
         },
         formatoFecha(date) {
             return this.$moment(String(date)).format("DD/MM/YYYY");
+        },
+        fechaActual() {
+            // crea un nuevo objeto `Date`
+            var today = new Date();
+
+            // `getDate()` devuelve el día del mes (del 1 al 31)
+            var day = today.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            // `getMonth()` devuelve el mes (de 0 a 11)
+            var month = today.getMonth() + 1;
+            if (month < 10) {
+                month = "0" + month;
+            }
+
+            // `getFullYear()` devuelve el año completo
+            var year = today.getFullYear();
+
+            // muestra la fecha de hoy en formato `MM/DD/YYYY`
+            return `${year}-${month}-${day}`;
         },
     },
 };
