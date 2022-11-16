@@ -33,7 +33,7 @@
                                 <el-input
                                     placeholder="Nombre"
                                     :class="{ 'is-invalid': errors.nombre }"
-                                    v-model="agencia.nombre"
+                                    v-model="regional.nombre"
                                     clearable
                                 >
                                 </el-input>
@@ -79,7 +79,7 @@ export default {
             type: String,
             default: "nuevo",
         },
-        agencia: {
+        regional: {
             type: Object,
             default: {
                 id: 0,
@@ -130,7 +130,7 @@ export default {
             this.enviando = true;
             try {
                 this.textoBtn = "Enviando...";
-                let url = "/admin/agencias";
+                let url = "/admin/regionals";
                 let config = {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -139,11 +139,11 @@ export default {
                 let formdata = new FormData();
                 formdata.append(
                     "nombre",
-                    this.agencia.nombre ? this.agencia.nombre : ""
+                    this.regional.nombre ? this.regional.nombre : ""
                 );
 
                 if (this.accion == "edit") {
-                    url = "/admin/agencias/" + this.agencia.id;
+                    url = "/admin/regionals/" + this.regional.id;
                     formdata.append("_method", "PUT");
                 }
                 axios
@@ -156,7 +156,7 @@ export default {
                             showConfirmButton: false,
                             timer: 1500,
                         });
-                        this.limpiaAgencia();
+                        this.limpiaRegional();
                         this.$emit("envioModal");
                         this.errors = [];
                         if (this.accion == "edit") {
@@ -188,9 +188,9 @@ export default {
             this.bModal = false;
             this.$emit("close");
         },
-        limpiaAgencia() {
+        limpiaRegional() {
             this.errors = [];
-            this.agencia.nombre = "";
+            this.regional.nombre = "";
         },
     },
 };

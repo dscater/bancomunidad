@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Agencias</h1>
+                        <h1>Regional</h1>
                     </div>
                 </div>
             </div>
@@ -20,13 +20,13 @@
                                         <button
                                             v-if="
                                                 permisos.includes(
-                                                    'agencias.create'
+                                                    'regionals.create'
                                                 )
                                             "
                                             class="btn btn-outline-primary bg-primary btn-flat btn-block"
                                             @click="
                                                 abreModal('nuevo');
-                                                limpiaAgencia();
+                                                limpiaRegional();
                                             "
                                         >
                                             <i class="fa fa-plus"></i>
@@ -122,7 +122,7 @@
                                                             class="btn-flat btn-block"
                                                             title="Eliminar registro"
                                                             @click="
-                                                                eliminaAgencia(
+                                                                eliminaRegional(
                                                                     row.item.id,
                                                                     row.item
                                                                         .full_name
@@ -176,9 +176,9 @@
         <Nuevo
             :muestra_modal="muestra_modal"
             :accion="modal_accion"
-            :agencia="oAgencia"
+            :regional="oRegional"
             @close="muestra_modal = false"
-            @envioModal="getAgencias"
+            @envioModal="getRegionals"
         ></Nuevo>
     </div>
 </template>
@@ -216,7 +216,7 @@ export default {
             }),
             muestra_modal: false,
             modal_accion: "nuevo",
-            oAgencia: {
+            oRegional: {
                 id: 0,
                 nombre: "",
             },
@@ -235,33 +235,33 @@ export default {
         };
     },
     mounted() {
-        this.getAgencias();
+        this.getRegionals();
         this.loadingWindow.close();
     },
     methods: {
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
-            this.oAgencia.id = item.id;
-            this.oAgencia.nombre = item.nombre ? item.nombre : "";
+            this.oRegional.id = item.id;
+            this.oRegional.nombre = item.nombre ? item.nombre : "";
             this.modal_accion = "edit";
             this.muestra_modal = true;
         },
 
-        // Listar Agencias
-        getAgencias() {
+        // Listar Regionals
+        getRegionals() {
             this.showOverlay = true;
             this.muestra_modal = false;
-            let url = "/admin/agencias";
+            let url = "/admin/regionals";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
             axios.get(url).then((res) => {
                 this.showOverlay = false;
-                this.listRegistros = res.data.agencias;
+                this.listRegistros = res.data.regionals;
                 this.totalRows = res.data.total;
             });
         },
-        eliminaAgencia(id, descripcion) {
+        eliminaRegional(id, descripcion) {
             Swal.fire({
                 title: "¿Quierés eliminar este registro?",
                 html: `<strong>${descripcion}</strong>`,
@@ -274,11 +274,11 @@ export default {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     axios
-                        .post("/admin/agencias/" + id, {
+                        .post("/admin/regionals/" + id, {
                             _method: "DELETE",
                         })
                         .then((res) => {
-                            this.getAgencias();
+                            this.getRegionals();
                             this.filter = "";
                             Swal.fire({
                                 icon: "success",
@@ -290,11 +290,11 @@ export default {
                 }
             });
         },
-        abreModal(tipo_accion = "nuevo", agencia = null) {
+        abreModal(tipo_accion = "nuevo", regional = null) {
             this.muestra_modal = true;
             this.modal_accion = tipo_accion;
-            if (agencia) {
-                this.oAgencia = agencia;
+            if (regional) {
+                this.oRegional = regional;
             }
         },
         onFiltered(filteredItems) {
@@ -302,8 +302,8 @@ export default {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
-        limpiaAgencia() {
-            this.oAgencia.nombre = "";
+        limpiaRegional() {
+            this.oRegional.nombre = "";
         },
         formatoFecha(date) {
             return this.$moment(String(date)).format("DD/MM/YYYY");
