@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 07-11-2022 a las 17:52:45
+-- Tiempo de generación: 23-11-2022 a las 00:06:38
 -- Versión del servidor: 5.7.33
 -- Versión de PHP: 7.4.19
 
@@ -40,9 +40,9 @@ CREATE TABLE `acceso_sistemas` (
 --
 
 INSERT INTO `acceso_sistemas` (`id`, `funcionario_id`, `sistema_id`, `created_at`, `updated_at`) VALUES
-(3, 3, 1, '2022-11-07 17:12:59', '2022-11-07 17:12:59'),
 (7, 1, 1, '2022-11-07 17:24:04', '2022-11-07 17:24:04'),
-(8, 1, 3, '2022-11-07 17:26:52', '2022-11-07 17:26:52');
+(8, 1, 3, '2022-11-07 17:26:52', '2022-11-07 17:26:52'),
+(9, 3, 3, '2022-11-07 18:04:46', '2022-11-07 18:04:46');
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,8 @@ CREATE TABLE `agencias` (
 INSERT INTO `agencias` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 'AGENCIA 1', '2022-11-03', '2022-11-03 19:10:30', '2022-11-03 19:10:30'),
 (2, 'AGENCIA  2', '2022-11-03', '2022-11-03 19:10:42', '2022-11-03 19:10:42'),
-(4, 'AGENCIA 3', '2022-11-03', '2022-11-03 16:10:33', '2022-11-03 16:10:33');
+(4, 'AGENCIA 3', '2022-11-03', '2022-11-03 16:10:33', '2022-11-03 16:10:33'),
+(6, 'AGENCIA 11', '2022-11-13', '2022-11-14 02:45:43', '2022-11-14 02:45:43');
 
 -- --------------------------------------------------------
 
@@ -90,7 +91,8 @@ INSERT INTO `asignacions` (`id`, `funcionario_id`, `sistema_id`, `fecha_registro
 (1, 1, 1, '2022-11-06', '2022-11-06 13:55:51', '2022-11-06 13:55:51'),
 (2, 1, 3, '2022-11-06', '2022-11-06 14:03:50', '2022-11-06 14:03:50'),
 (3, 3, 1, '2022-11-06', '2022-11-06 14:14:24', '2022-11-06 14:14:24'),
-(4, 3, 3, '2022-11-07', '2022-11-07 15:34:13', '2022-11-07 15:34:13');
+(4, 3, 3, '2022-11-07', '2022-11-07 15:34:13', '2022-11-07 15:34:13'),
+(5, 4, 1, '2022-11-22', '2022-11-23 00:06:16', '2022-11-23 00:06:16');
 
 -- --------------------------------------------------------
 
@@ -111,10 +113,14 @@ CREATE TABLE `asignacion_detalles` (
 --
 
 INSERT INTO `asignacion_detalles` (`id`, `asignacion_id`, `perfil_id`, `created_at`, `updated_at`) VALUES
-(10, 1, 3, '2022-11-06 14:15:49', '2022-11-06 14:15:49'),
 (12, 2, 6, '2022-11-06 15:30:20', '2022-11-06 15:30:20'),
 (13, 2, 5, '2022-11-06 15:30:39', '2022-11-06 15:30:39'),
-(14, 4, 5, '2022-11-07 15:34:13', '2022-11-07 15:34:13');
+(14, 4, 5, '2022-11-07 15:34:13', '2022-11-07 15:34:13'),
+(15, 3, 3, '2022-11-11 00:28:13', '2022-11-11 00:28:13'),
+(16, 3, 6, '2022-11-23 00:06:05', '2022-11-23 00:06:05'),
+(17, 5, 3, '2022-11-23 00:06:16', '2022-11-23 00:06:16'),
+(18, 5, 5, '2022-11-23 00:06:16', '2022-11-23 00:06:16'),
+(19, 5, 6, '2022-11-23 00:06:17', '2022-11-23 00:06:17');
 
 -- --------------------------------------------------------
 
@@ -169,7 +175,8 @@ CREATE TABLE `formularios` (
 
 INSERT INTO `formularios` (`id`, `codigo`, `fecha_solicitud`, `fecha_respuesta`, `hora_solicitud`, `hora_respuesta`, `funcionario_id`, `tipo_acceso`, `cargo_id`, `agencia_origen`, `agencia_destino`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (24, 1, NULL, NULL, NULL, NULL, 1, 'ALTO DE ACCESO', 2, 1, 2, '2022-11-06', '2022-11-06 15:20:48', '2022-11-06 15:25:48'),
-(26, 2, '2022-11-06', '2022-11-08', '11:28:00', '11:28:00', 3, 'CAMBIO DE AGENCIA', NULL, 1, 2, '2022-11-06', '2022-11-06 15:29:01', '2022-11-06 15:29:01');
+(26, 2, '2022-11-06', '2022-11-08', '11:28:00', '11:28:00', 3, 'CAMBIO DE AGENCIA', NULL, 1, 2, '2022-11-06', '2022-11-06 15:29:01', '2022-11-06 15:29:01'),
+(27, 3, '2022-11-22', '2022-12-22', '18:00:00', '09:00:00', 4, 'BAJA DE ACCESO', 3, 1, 2, '2022-11-22', '2022-11-22 23:00:57', '2022-11-22 23:03:11');
 
 -- --------------------------------------------------------
 
@@ -197,7 +204,8 @@ CREATE TABLE `funcionarios` (
 
 INSERT INTO `funcionarios` (`id`, `ci`, `nombre`, `paterno`, `materno`, `cargo_id`, `regional_id`, `agencia_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, '44444', 'JUAN PEDRO', 'GOMES', 'RAMIREZ', 2, 2, 2, '2022-11-03', '2022-11-03 16:10:37', '2022-11-03 16:11:22'),
-(3, '444', 'ALEX', 'GONZALES', 'RAMIRES', 1, 2, 4, '2022-11-03', '2022-11-03 17:31:58', '2022-11-03 17:31:58');
+(3, '444', 'ALEX', 'GONZALES', 'RAMIRES', 1, 2, 4, '2022-11-03', '2022-11-03 17:31:58', '2022-11-03 17:31:58'),
+(4, '44676', 'JORGE', 'SOLIZ', 'SOLIZ', 1, 2, 2, '2022-11-13', '2022-11-14 02:34:41', '2022-11-14 02:34:54');
 
 -- --------------------------------------------------------
 
@@ -228,7 +236,33 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (10, '2022_11_02_152536_create_acceso_sistemas_table', 1),
 (11, '2022_11_02_152546_create_formularios_table', 1),
 (12, '2022_11_02_154113_create_asignacion_detalles_table', 1),
-(13, '2022_11_03_123543_create_perfil_sistemas_table', 2);
+(13, '2022_11_03_123543_create_perfil_sistemas_table', 2),
+(14, '2022_11_22_190824_create_opcion_sistemas_table', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `opcion_sistemas`
+--
+
+CREATE TABLE `opcion_sistemas` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `sistema_id` bigint(20) UNSIGNED NOT NULL,
+  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `opcion_sistemas`
+--
+
+INSERT INTO `opcion_sistemas` (`id`, `sistema_id`, `nombre`, `created_at`, `updated_at`) VALUES
+(4, 1, 'opcion sistema 1', '2022-11-22 23:36:10', '2022-11-22 23:36:10'),
+(5, 1, 'opcion 2 sistema 1', '2022-11-22 23:36:10', '2022-11-22 23:36:10'),
+(6, 4, 'opcion sistema 3', '2022-11-22 23:36:28', '2022-11-22 23:36:28'),
+(7, 4, 'opcion 2 sistema 3', '2022-11-22 23:36:28', '2022-11-22 23:36:28'),
+(20, 7, 'opcion nueva', '2022-11-22 23:41:30', '2022-11-22 23:41:30');
 
 -- --------------------------------------------------------
 
@@ -275,7 +309,10 @@ CREATE TABLE `perfil_sistemas` (
 INSERT INTO `perfil_sistemas` (`id`, `perfil_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 3, 1, '2022-11-03', '2022-11-03 16:59:37', '2022-11-03 16:59:37'),
 (2, 5, 3, '2022-11-03', '2022-11-03 17:02:53', '2022-11-03 17:02:53'),
-(3, 6, 3, '2022-11-03', '2022-11-03 17:56:30', '2022-11-03 17:56:30');
+(3, 6, 3, '2022-11-03', '2022-11-03 17:56:30', '2022-11-03 17:56:30'),
+(4, 5, 7, '2022-11-22', '2022-11-22 23:48:52', '2022-11-22 23:48:52'),
+(5, 5, 1, '2022-11-22', '2022-11-23 00:05:44', '2022-11-23 00:05:44'),
+(6, 6, 1, '2022-11-22', '2022-11-23 00:05:49', '2022-11-23 00:05:49');
 
 -- --------------------------------------------------------
 
@@ -316,7 +353,10 @@ CREATE TABLE `regionals` (
 INSERT INTO `regionals` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 'REGIONAL 1', '2022-11-03', '2022-11-03 19:11:29', '2022-11-03 19:11:39'),
 (2, 'REGIONAL 2', '2022-11-03', '2022-11-03 19:11:42', '2022-11-03 19:11:42'),
-(4, 'REGIONAL 3', '2022-11-03', '2022-11-03 19:53:17', '2022-11-03 19:53:17');
+(4, 'REGIONAL 3', '2022-11-03', '2022-11-03 19:53:17', '2022-11-03 19:53:17'),
+(6, 'REGIONAL 13', '2022-11-13', '2022-11-14 02:45:41', '2022-11-14 02:46:00'),
+(7, 'REGIONAL 4', '2022-11-13', '2022-11-14 03:17:44', '2022-11-14 03:17:44'),
+(8, 'REGIONAL 14', '2022-11-16', '2022-11-16 18:14:06', '2022-11-16 18:14:06');
 
 -- --------------------------------------------------------
 
@@ -343,7 +383,9 @@ CREATE TABLE `sistemas` (
 
 INSERT INTO `sistemas` (`id`, `nombre`, `objetivo`, `version`, `tipo`, `fecha_produccion`, `empresa_proveedora`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 'SISTEMA 1', 'OBJETIVO DEL SISTEMA 1', '1.0.0', 'EXTERNO', '2022-01-03', 'PROVEEDOR', '2022-11-03', '2022-11-03 16:29:03', '2022-11-03 16:29:30'),
-(3, 'SISTEMA 2', 'OBJETIVO SISTEMA 2', '1.1', 'INTERNO', '2022-04-04', '', '2022-11-03', '2022-11-03 17:02:46', '2022-11-03 17:02:46');
+(3, 'SISTEMA 2', 'OBJETIVO SISTEMA 2', '1.1', 'INTERNO', '2022-04-04', '', '2022-11-03', '2022-11-03 17:02:46', '2022-11-03 17:02:46'),
+(4, 'SISTEMA 3', 'OBJETIVO DE PRUEBA 3', '11', 'EXTERNO', '2022-11-13', 'EMPRESA PROVEEDORA', '2022-11-13', '2022-11-14 03:36:58', '2022-11-14 03:36:58'),
+(7, 'SISTEMA CON OPCIONES', 'CREAR SISTEMA CON OPCIONES', '1', 'EXTERNO', '2022-11-22', 'EMPRESA PROVEEDORA', '2022-11-22', '2022-11-22 23:38:14', '2022-11-22 23:38:14');
 
 -- --------------------------------------------------------
 
@@ -367,7 +409,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `usuario`, `password`, `tipo`, `created_at`, `updated_at`) VALUES
 (1, 'usti', '$2y$10$5DhY.JD1Us1lKPaGrsqBP.soX4zUY6apepwbwhOVhybcVbyaVEE8.', 'TI', NULL, NULL),
 (2, 'usseguridad', '$2y$10$5DhY.JD1Us1lKPaGrsqBP.soX4zUY6apepwbwhOVhybcVbyaVEE8.', 'SEGURIDAD DE LA INFORMACIÓN', NULL, NULL),
-(3, 'ussistemas', '$2y$10$5DhY.JD1Us1lKPaGrsqBP.soX4zUY6apepwbwhOVhybcVbyaVEE8.', 'SISTEMAS', NULL, NULL);
+(3, 'ussistemas', '$2y$10$5DhY.JD1Us1lKPaGrsqBP.soX4zUY6apepwbwhOVhybcVbyaVEE8.', 'SISTEMAS', NULL, NULL),
+(4, 'usanalista', '$2y$10$5DhY.JD1Us1lKPaGrsqBP.soX4zUY6apepwbwhOVhybcVbyaVEE8.', 'ANALISTA DE SEGURIDAD', NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -435,6 +478,13 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `opcion_sistemas`
+--
+ALTER TABLE `opcion_sistemas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `opcion_sistemas_sistema_id_foreign` (`sistema_id`);
+
+--
 -- Indices de la tabla `perfils`
 --
 ALTER TABLE `perfils`
@@ -482,25 +532,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `acceso_sistemas`
 --
 ALTER TABLE `acceso_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `agencias`
 --
 ALTER TABLE `agencias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacions`
 --
 ALTER TABLE `asignacions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_detalles`
 --
 ALTER TABLE `asignacion_detalles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`
@@ -512,19 +562,25 @@ ALTER TABLE `cargos`
 -- AUTO_INCREMENT de la tabla `formularios`
 --
 ALTER TABLE `formularios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `opcion_sistemas`
+--
+ALTER TABLE `opcion_sistemas`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `perfils`
@@ -536,7 +592,7 @@ ALTER TABLE `perfils`
 -- AUTO_INCREMENT de la tabla `perfil_sistemas`
 --
 ALTER TABLE `perfil_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `personal_access_tokens`
@@ -548,19 +604,19 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `regionals`
 --
 ALTER TABLE `regionals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `sistemas`
 --
 ALTER TABLE `sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -603,6 +659,12 @@ ALTER TABLE `funcionarios`
   ADD CONSTRAINT `funcionarios_agencia_id_foreign` FOREIGN KEY (`agencia_id`) REFERENCES `agencias` (`id`),
   ADD CONSTRAINT `funcionarios_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`),
   ADD CONSTRAINT `funcionarios_regional_id_foreign` FOREIGN KEY (`regional_id`) REFERENCES `regionals` (`id`);
+
+--
+-- Filtros para la tabla `opcion_sistemas`
+--
+ALTER TABLE `opcion_sistemas`
+  ADD CONSTRAINT `opcion_sistemas_sistema_id_foreign` FOREIGN KEY (`sistema_id`) REFERENCES `sistemas` (`id`);
 
 --
 -- Filtros para la tabla `perfil_sistemas`

@@ -165,6 +165,53 @@
                                 ></span>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Opciones</label>
+                                <button
+                                    class="btn btn-success btn-xs"
+                                    @click.prevent="agregarOpcion"
+                                >
+                                    <i class="fa fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="row mt-2">
+                                <div
+                                    v-for="(opcion, index) in sistema.opciones"
+                                    class="col-md-12 mb-1"
+                                    :key="index"
+                                >
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">{{
+                                                index + 1
+                                            }}</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model="opcion.nombre"
+                                        />
+                                        <div class="input-group-append">
+                                            <button
+                                                class="btn btn-default"
+                                                type="button"
+                                                @click="
+                                                    quitarOpcion(
+                                                        index,
+                                                        opcion.id
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="fa fa-times text-red"
+                                                ></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -210,6 +257,7 @@ export default {
                 tipo: "",
                 fecha_produccion: "",
                 empresa_proveedora: "",
+                opciones: [],
             },
         },
     },
@@ -244,6 +292,7 @@ export default {
             user: JSON.parse(localStorage.getItem("user")),
             bModal: this.muestra_modal,
             enviando: false,
+            eliminados: [],
             errors: [],
             listTipos: ["EXTERNO", "INTERNO"],
             pickerOptions: {
@@ -322,9 +371,17 @@ export default {
                         : ""
                 );
 
+                this.sistema.opciones.forEach((elem) => {
+                    formdata.append("opciones_id[]", elem.id);
+                    formdata.append("opciones_nombre[]", elem.nombre);
+                });
+
                 if (this.accion == "edit") {
                     url = "/admin/sistemas/" + this.sistema.id;
                     formdata.append("_method", "PUT");
+                    this.eliminados.forEach((elem) => {
+                        formdata.append("eliminados[]", elem);
+                    });
                 }
                 axios
                     .post(url, formdata, config)
@@ -398,6 +455,19 @@ export default {
 
             // muestra la fecha de hoy en formato `MM/DD/YYYY`
             return `${year}-${month}-${day}`;
+        },
+
+        agregarOpcion() {
+            this.sistema.opciones.push({
+                id: 0,
+                nombre: "",
+            });
+        },
+        quitarOpcion(index, id) {
+            if (id != 0) {
+                this.eliminados.push(id);
+            }
+            this.sistema.opciones.splice(index, 1);
         },
     },
 };

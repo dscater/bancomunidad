@@ -196,12 +196,12 @@ export default {
             listRegistros: [],
             showOverlay: false,
             fields: [
+                { key: "sistema.nombre", label: "Sistema", sortable: true },
                 {
                     key: "perfil.nombre",
                     label: "Perfil",
                     sortable: true,
                 },
-                { key: "sistema.nombre", label: "Sistema", sortable: true },
                 {
                     key: "fecha_registro",
                     label: "Fecha de registro",

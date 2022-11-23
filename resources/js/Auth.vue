@@ -146,6 +146,11 @@ export default {
     background-position: center;
 }
 
+.login-box {
+    width: 600px;
+    max-width: 100%;
+}
+
 .card {
     border-radius: 0px;
 }

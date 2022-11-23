@@ -25,7 +25,10 @@ class FormularioController extends Controller
     public function store(Request $request)
     {
         if (isset($request->tipo_acceso) && $request->tipo_acceso != "") {
-            if ($request->tipo_acceso == "ALTO DE ACCESO") {
+            if (
+                $request->tipo_acceso == "ALTO DE ACCESO" ||
+                $request->tipo_acceso == 'BAJA DE ACCESO'
+            ) {
                 $this->validacion["cargo_id"] = "required";
                 unset($request["agencia_origen"]);
                 unset($request["agencia_destino"]);
@@ -64,7 +67,10 @@ class FormularioController extends Controller
     public function update(Request $request, Formulario $formulario)
     {
         if (isset($request->tipo_acceso) && $request->tipo_acceso != "") {
-            if ($request->tipo_acceso == "ALTO DE ACCESO") {
+            if (
+                $request->tipo_acceso == "ALTO DE ACCESO" ||
+                $request->tipo_acceso == 'BAJA DE ACCESO'
+            ) {
                 $this->validacion["cargo_id"] = "required";
                 unset($request["agencia_origen"]);
                 unset($request["agencia_destino"]);

@@ -94,11 +94,32 @@ class AsignacionController extends Controller
             ->join("asignacion_detalles", "asignacion_detalles.asignacion_id", "=", "asignacions.id")
             ->where("sistema_id", $request->sistema_id)->get());
 
+        $array_perfiles = [];
+        foreach ($sistema->perfiles as $perfil) {
+            $existe_asignacion = Asignacion::where("funcionario_id", $request->funcionario_id)
+                ->join("asignacion_detalles", "asignacion_detalles.asignacion_id", "=", "asignacions.id")
+                ->where("sistema_id", $request->sistema_id)
+                ->where("perfil_id", $perfil->perfil_id)->get()->first();
+            if ($existe_asignacion) {
+                $array_perfiles[] = [
+                    "perfil" => $perfil->perfil,
+                    "check" => true,
+                ];
+            } else {
+                $array_perfiles[] = [
+                    "perfil" => $perfil->perfil,
+                    "check" => false,
+                ];
+            }
+        }
+
+
         $estado = $total_perfiles == $asignaciones_funcionario ? 'CORRECTO' : 'PENDIENTE';
         return response()->JSON([
             "estado" => $estado,
             "total_perfiles" => $total_perfiles,
             "asignaciones_funcionario" => $asignaciones_funcionario,
+            "array_perfiles" => $array_perfiles
         ]);
     }
 }

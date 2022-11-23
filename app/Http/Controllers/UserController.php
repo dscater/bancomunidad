@@ -54,13 +54,6 @@ class UserController extends Controller
             'asignacions.create',
             'asignacions.edit',
             'asignacions.destroy',
-
-            'formularios.index',
-            'formularios.create',
-            'formularios.edit',
-            'formularios.destroy',
-
-
         ],
         'SEGURIDAD DE LA INFORMACIÓN' => [
             'controls.index',
@@ -73,6 +66,12 @@ class UserController extends Controller
             'acceso_sistemas.edit',
             'acceso_sistemas.destroy',
         ],
+        'ANALISTA DE SEGURIDAD' => [
+            'formularios.index',
+            'formularios.create',
+            'formularios.edit',
+            'formularios.destroy',
+        ]
     ];
 
     public function getPermisos(User $usuario)

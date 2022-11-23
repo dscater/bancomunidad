@@ -94,6 +94,17 @@
                                                         )
                                                     }}
                                                 </template>
+                                                <template #cell(opciones)="row">
+                                                    <ol>
+                                                        <li
+                                                            v-for="opcion in row
+                                                                .item.opciones"
+                                                        >
+                                                            {{ opcion.nombre }}
+                                                        </li>
+                                                    </ol>
+                                                </template>
+
                                                 <template
                                                     #cell(fecha_registro)="row"
                                                 >
@@ -233,6 +244,11 @@ export default {
                     sortable: true,
                 },
                 {
+                    key: "opciones",
+                    label: "Opciones",
+                    sortable: true,
+                },
+                {
                     key: "fecha_registro",
                     label: "Fecha de registro",
                     sortable: true,
@@ -254,6 +270,7 @@ export default {
                 tipo: "",
                 fecha_produccion: this.fechaActual(),
                 empresa_proveedora: "",
+                opciones: [],
             },
             currentPage: 1,
             perPage: 5,
@@ -287,6 +304,7 @@ export default {
             this.oSistema.empresa_proveedora = item.empresa_proveedora
                 ? item.empresa_proveedora
                 : "";
+            this.oSistema.opciones = item.opciones ? item.opciones : [];
 
             this.modal_accion = "edit";
             this.muestra_modal = true;
@@ -357,6 +375,7 @@ export default {
             this.oSistema.tipo = "";
             this.oSistema.fecha_produccion = this.fechaActual();
             this.oSistema.empresa_proveedora = "";
+            this.oSistema.opciones = [];
         },
         formatoFecha(date) {
             return this.$moment(String(date)).format("DD/MM/YYYY");

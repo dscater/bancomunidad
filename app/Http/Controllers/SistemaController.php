@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OpcionSistema;
 use App\Models\PerfilSistema;
 use App\Models\Sistema;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class SistemaController extends Controller
 
     public function index(Request $request)
     {
-        $sistemas = Sistema::all();
+        $sistemas = Sistema::with("opciones")->get();
         return response()->JSON(['sistemas' => $sistemas, 'total' => count($sistemas)], 200);
     }
 
@@ -29,7 +30,19 @@ class SistemaController extends Controller
     {
         $request->validate($this->validacion, $this->mensajes);
         $request["fecha_registro"] = date("Y-m-d");
-        $sistema = Sistema::create(array_map('mb_strtoupper', $request->all()));
+        $sistema = Sistema::create(array_map('mb_strtoupper', $request->except("opciones_id", "opciones_nombre")));
+
+        $opciones_id = $request->opciones_id;
+        $opciones_nombre = $request->opciones_nombre;
+
+        if (isset($opciones_nombre) && count($opciones_nombre) > 0) {
+            for ($i = 0; $i < count($opciones_nombre); $i++) {
+                $sistema->opciones()->create([
+                    "nombre" => $opciones_nombre[$i]
+                ]);
+            }
+        }
+
         return response()->JSON([
             'sw' => true,
             'sistema' => $sistema,
@@ -40,7 +53,34 @@ class SistemaController extends Controller
     public function update(Request $request, Sistema $sistema)
     {
         $request->validate($this->validacion, $this->mensajes);
-        $sistema->update(array_map('mb_strtoupper', $request->all()));
+        $sistema->update(array_map('mb_strtoupper', $request->except("opciones_id", "opciones_nombre", "eliminados")));
+
+        $opciones_id = $request->opciones_id;
+        $opciones_nombre = $request->opciones_nombre;
+        $eliminados = $request->eliminados;
+
+        if (isset($opciones_nombre) && count($opciones_nombre) > 0) {
+            for ($i = 0; $i < count($opciones_nombre); $i++) {
+                if ($opciones_id[$i] != 0) {
+                    OpcionSistema::find($opciones_id[$i])->update([
+                        "nombre" => $opciones_nombre[$i]
+                    ]);
+                } else {
+                    $sistema->opciones()->create([
+                        "nombre" => $opciones_nombre[$i]
+                    ]);
+                }
+            }
+        }
+        if (isset($eliminados) && count($eliminados) > 0) {
+            for ($i = 0; $i < count($eliminados); $i++) {
+                $opcion_sistema = OpcionSistema::find($eliminados[$i]);
+                if ($opcion_sistema) {
+                    $opcion_sistema->delete();
+                }
+            }
+        }
+
         return response()->JSON([
             'sw' => true,
             'sistema' => $sistema,
@@ -55,6 +95,8 @@ class SistemaController extends Controller
 
     public function destroy(Sistema $sistema)
     {
+        $sistema->perfiles()->delete();
+        $sistema->opciones()->delete();
         $sistema->delete();
         return response()->JSON([
             'sw' => true,
@@ -66,5 +108,11 @@ class SistemaController extends Controller
     {
         $perfiles = PerfilSistema::where("sistema_id", $sistema->id)->get();
         return response()->JSON($perfiles);
+    }
+
+    public function getOpcionesSistema(Sistema $sistema)
+    {
+        $opciones = OpcionSistema::where("sistema_id", $sistema->id)->get();
+        return response()->JSON($opciones);
     }
 }

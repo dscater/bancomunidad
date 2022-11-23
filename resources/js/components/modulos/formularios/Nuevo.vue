@@ -174,6 +174,7 @@
                                     <el-option
                                         v-for="item in [
                                             'ALTO DE ACCESO',
+                                            'BAJA DE ACCESO',
                                             'CAMBIO DE AGENCIA',
                                         ]"
                                         :key="item"
@@ -263,7 +264,8 @@
                                 class="form-group col-md-6"
                                 v-if="
                                     formulario.tipo_acceso != '' &&
-                                    formulario.tipo_acceso == 'ALTO DE ACCESO'
+                                    formulario.tipo_acceso == 'ALTO DE ACCESO' || 
+                                    formulario.tipo_acceso == 'BAJA DE ACCESO'
                                 "
                             >
                                 <label

@@ -37,6 +37,7 @@
                                     }"
                                     v-model="perfil_sistema.sistema_id"
                                     clearable
+                                    @change="getOpcionesSistema"
                                 >
                                     <el-option
                                         v-for="item in listSistemas"
@@ -165,6 +166,28 @@
                                 ></span>
                             </div>
                         </div>
+
+                        <div class="row mt-2">
+                            <div
+                                v-for="(opcion, index) in listOpciones"
+                                class="col-md-12 mb-1"
+                                :key="index"
+                            >
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{{
+                                            index + 1
+                                        }}</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="opcion.nombre"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -213,6 +236,7 @@ export default {
     watch: {
         muestra_modal: function (newVal, oldVal) {
             this.errors = [];
+            this.getOpcionesSistema();
             if (newVal) {
                 this.bModal = true;
             } else {
@@ -252,6 +276,7 @@ export default {
                 perfils: [],
             },
             listSistemas: [],
+            listOpciones: [],
         };
     },
     mounted() {
@@ -272,6 +297,21 @@ export default {
             axios.get("/admin/sistemas").then((response) => {
                 this.listSistemas = response.data.sistemas;
             });
+        },
+        getOpcionesSistema() {
+            if (this.perfil_sistema.sistema_id != "") {
+                axios
+                    .get(
+                        "/admin/sistemas/getOpcionesSistema/" +
+                            this.perfil_sistema.sistema_id
+                    )
+                    .then((response) => {
+                        this.listOpciones = response.data;
+                    });
+            } else {
+                console.log("aSDasdasd");
+                this.listOpciones = [];
+            }
         },
 
         // envia modal

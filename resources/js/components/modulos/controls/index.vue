@@ -55,7 +55,7 @@
                                             v-model="sistema_id"
                                             class="d-block"
                                             filterable
-                                            @change="getEstado"
+                                            @change="getEstado()"
                                         >
                                             <el-option
                                                 v-for="item in listSistemas"
@@ -82,10 +82,62 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <strong>Estado:</strong> <span v-text="oEstado.estado" class="badge" :class="{'badge-success':oEstado.estado == 'CORRECTO','badge-danger':oEstado.estado == 'PENDIENTE'}"></span>
+                                        <strong>Estado:</strong>
+                                        <span
+                                            v-text="oEstado.estado"
+                                            class="badge"
+                                            :class="{
+                                                'badge-success':
+                                                    oEstado.estado ==
+                                                        'CORRECTO' &&
+                                                    oEstado.total_perfiles > 0,
+                                                'badge-danger':
+                                                    oEstado.estado ==
+                                                    'PENDIENTE',
+                                            }"
+                                        ></span>
                                     </div>
                                     <div class="col-md-8">
-                                        <strong>Accesos:</strong> <span v-text="oEstado.asignaciones_funcionario"></span> - <span v-text="oEstado.total_perfiles"></span>
+                                        <strong>Accesos:</strong>
+                                        <span
+                                            v-text="
+                                                oEstado.asignaciones_funcionario
+                                            "
+                                        ></span>
+                                        -
+                                        <span
+                                            v-text="oEstado.total_perfiles"
+                                        ></span>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ol>
+                                            <li
+                                                v-for="(
+                                                    perfil, index
+                                                ) in listPerfilSistema"
+                                                :key="index"
+                                                :class="{
+                                                    'text-success':
+                                                        perfil.check,
+                                                    'text-danger':
+                                                        !perfil.check,
+                                                }"
+                                            >
+                                                {{ perfil.perfil.nombre }}
+                                                <i
+                                                    class="fa"
+                                                    :class="{
+                                                        'fa-check':
+                                                            perfil.check,
+                                                        'fa-times':
+                                                            !perfil.check,
+                                                    }"
+                                                ></i>
+                                            </li>
+                                        </ol>
                                     </div>
                                 </div>
                             </div>
@@ -125,6 +177,17 @@ export default {
         this.loadingWindow.close();
     },
     methods: {
+        // getPerfiles() {
+        //     if (this.sistema_id != "") {
+        //         axios
+        //             .get("/admin/sistemas/getPerfiles/" + this.sistema_id)
+        //             .then((response) => {
+        //                 this.listPerfilSistema = response.data;
+        //             });
+        //     } else {
+        //         this.listPerfilSistema = [];
+        //     }
+        // },
         getFuncionarios() {
             axios.get("/admin/funcionarios").then((response) => {
                 this.listFuncionarios = response.data.funcionarios;
@@ -157,12 +220,15 @@ export default {
                     })
                     .then((response) => {
                         this.oEstado.estado = response.data.estado;
-                        this.oEstado.total_perfiles = response.data.total_perfiles;
+                        this.oEstado.total_perfiles =
+                            response.data.total_perfiles;
                         this.oEstado.asignaciones_funcionario =
                             response.data.asignaciones_funcionario;
+                        this.listPerfilSistema = response.data.array_perfiles;
                     });
             } else {
-                this.listPerfilSistema = [];
+                this.oEstado.total_perfiles = "";
+                this.oEstado.asignaciones_funcionario = "";
             }
         },
     },

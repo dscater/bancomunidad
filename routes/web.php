@@ -57,6 +57,8 @@ Route::prefix('admin')->group(function () {
     ]);
 
     // SISTEMAS
+    
+    Route::get('sistemas/getOpcionesSistema/{sistema}', [SistemaController::class, "getOpcionesSistema"]);
     Route::get('sistemas/getPerfiles/{sistema}', [SistemaController::class, "getPerfiles"]);
     Route::resource('sistemas', SistemaController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'

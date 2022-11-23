@@ -98,7 +98,10 @@
                                                         v-if="
                                                             row.item
                                                                 .tipo_acceso ==
-                                                            'ALTO DE ACCESO'
+                                                                'ALTO DE ACCESO' ||
+                                                            row.item
+                                                                .tipo_acceso ==
+                                                                'BAJA DE ACCESO'
                                                         "
                                                     >
                                                         <p>

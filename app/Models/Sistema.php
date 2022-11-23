@@ -18,4 +18,9 @@ class Sistema extends Model
     {
         return $this->hasMany(PerfilSistema::class, 'sistema_id');
     }
+
+    public function opciones()
+    {
+        return $this->hasMany(OpcionSistema::class, 'sistema_id');
+    }
 }

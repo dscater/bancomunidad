@@ -37,97 +37,15 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <b-col lg="2" class="my-1">
+                                    <b-col lg="4" class="my-1 ml-auto">
                                         <div class="form-group text-xs">
-                                            <label>C.I.</label>
+                                            <label>Buscar:</label>
                                             <input
                                                 type="text"
                                                 class="form-control"
                                                 v-model="filter_ci"
                                                 @keyup="getFuncionarios"
                                                 placeholder="C.I."
-                                            />
-                                        </div>
-                                    </b-col>
-                                    <b-col lg="2" class="my-1">
-                                        <div class="form-group text-xs">
-                                            <label>Nombre</label>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                v-model="filter_nombre"
-                                                @keyup="getFuncionarios"
-                                                placeholder="Nombre"
-                                            />
-                                        </div>
-                                    </b-col>
-                                    <b-col lg="2" class="my-1">
-                                        <div class="form-group text-xs">
-                                            <label>Cargo</label>
-                                            <select
-                                                class="form-control"
-                                                v-model="filter_cargo"
-                                                @keyup="getFuncionarios"
-                                                @change="getFuncionarios"
-                                            >
-                                                <option
-                                                    value=""
-                                                    v-for="item in listCargos"
-                                                    :key="item.id"
-                                                    :value="item.id"
-                                                    :label="item.nombre"
-                                                ></option>
-                                            </select>
-                                        </div>
-                                    </b-col>
-                                    <b-col lg="2" class="my-1">
-                                        <div class="form-group text-xs">
-                                            <label>Regional</label>
-                                            <select
-                                                class="form-control"
-                                                v-model="filter_regional"
-                                                @keyup="getFuncionarios"
-                                                @change="getFuncionarios"
-                                            >
-                                                <option
-                                                    value=""
-                                                    v-for="item in listRegionals"
-                                                    :key="item.id"
-                                                    :value="item.id"
-                                                    :label="item.nombre"
-                                                ></option>
-                                            </select>
-                                        </div>
-                                    </b-col>
-                                    <b-col lg="2" class="my-1">
-                                        <div class="form-group text-xs">
-                                            <label>Agencia</label>
-                                            <select
-                                                class="form-control"
-                                                v-model="filter_agencia"
-                                                @keyup="getFuncionarios"
-                                                @change="getFuncionarios"
-                                            >
-                                                <option
-                                                    value=""
-                                                    v-for="item in listAgencias"
-                                                    :key="item.id"
-                                                    :value="item.id"
-                                                    :label="item.nombre"
-                                                ></option>
-                                            </select>
-                                        </div>
-                                    </b-col>
-                                    <b-col lg="2" class="my-1">
-                                        <div class="form-group text-xs">
-                                            <label>Fecha</label>
-                                            <input
-                                                type="date"
-                                                class="form-control"
-                                                v-model="filter_fecha"
-                                                @keyup="getFuncionarios"
-                                                @change="getFuncionarios"
-                                                placeholder="Fecha"
                                             />
                                         </div>
                                     </b-col>
@@ -266,7 +184,9 @@ export default {
                     label: "C.I.",
                     sortable: true,
                 },
-                { key: "full_name", label: "Nombre", sortable: true },
+                { key: "nombre", label: "Nombre(s)", sortable: true },
+                { key: "paterno", label: "Ap. Patenro", sortable: true },
+                { key: "materno", label: "Ap. Materno", sortable: true },
                 {
                     key: "cargo.nombre",
                     label: "Cargo",
