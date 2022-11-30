@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccesoSistema;
 use App\Models\Funcionario;
+use App\Models\Sistema;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 
@@ -29,17 +30,23 @@ class AccesoSistemaController extends Controller
 
         $funcionario = Funcionario::find($request->funcionario_id);
 
+        $primer_sistema = Sistema::first();
+
         if (!$acceso_sistema) {
             $acceso_sistema = AccesoSistema::create([
                 "funcionario_id" => $request->funcionario_id,
                 "sistema_id" => $request->sistema_id,
             ]);
             $acceso = true;
-            Usuario::where("ci", $funcionario->ci)->first()->update(["acceso" => 1]);
+            if ($primer_sistema && $request->sistema_id == $primer_sistema->id) {
+                Usuario::where("ci", $funcionario->ci)->first()->update(["acceso" => 1]);
+            }
         } else {
             $acceso_sistema->delete();
             $acceso = false;
-            Usuario::where("ci", $funcionario->ci)->first()->update(["acceso" => 0]);
+            if ($primer_sistema && $request->sistema_id == $primer_sistema->id) {
+                Usuario::where("ci", $funcionario->ci)->first()->update(["acceso" => 0]);
+            }
         }
 
         return response()->JSON([
