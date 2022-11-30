@@ -25,20 +25,25 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>Funcionario</label>
-                                        <el-select
-                                            v-model="funcionario_id"
-                                            class="d-block"
-                                            filterable
-                                            @change="getCargo"
-                                        >
-                                            <el-option
-                                                v-for="item in listFuncionarios"
-                                                :key="item.id"
-                                                :value="item.id"
-                                                :label="item.full_name"
-                                            >
-                                            </el-option>
-                                        </el-select>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input
+                                                    type="text"
+                                                    class="form-control mb-1"
+                                                    placeholder="C.I."
+                                                    v-model="filter_ci"
+                                                    @keyup="buscaFuncionario"
+                                                />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    v-model="nombre_funcionario"
+                                                    readonly
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label>Cargo</label>
@@ -77,7 +82,9 @@
                                                     ) in listSistemas"
                                                     :key="index"
                                                     :sistema="sistema"
-                                                    :funcionario_id="funcionario_id"
+                                                    :funcionario_id="
+                                                        funcionario_id
+                                                    "
                                                 ></Acceso>
                                             </tbody>
                                         </table>
@@ -105,7 +112,9 @@ export default {
             listFuncionarios: [],
             listSistemas: [],
             funcionario_id: "",
+            nombre_funcionario: "",
             cargo: "",
+            filter_ci: "",
         };
     },
     mounted() {
@@ -132,6 +141,26 @@ export default {
             axios.get("/admin/sistemas").then((response) => {
                 this.listSistemas = response.data.sistemas;
             });
+        },
+        buscaFuncionario() {
+            if (this.filter_ci.trim() != "") {
+                let existe = this.listFuncionarios.filter(
+                    (item) => item.ci == this.filter_ci
+                );
+                if (existe.length > 0) {
+                    this.funcionario_id = existe[0].id;
+                    this.nombre_funcionario = existe[0].full_name;
+                    this.cargo = existe[0].cargo.nombre;
+                } else {
+                    this.funcionario_id = "";
+                    this.nombre_funcionario = "";
+                    this.cargo = "";
+                }
+            } else {
+                this.funcionario_id = "";
+                this.nombre_funcionario = "";
+                this.cargo = "";
+            }
         },
     },
 };

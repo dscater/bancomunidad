@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 23-11-2022 a las 00:06:38
+-- Tiempo de generación: 30-11-2022 a las 13:23:00
 -- Versión del servidor: 5.7.33
 -- Versión de PHP: 7.4.19
 
@@ -40,9 +40,7 @@ CREATE TABLE `acceso_sistemas` (
 --
 
 INSERT INTO `acceso_sistemas` (`id`, `funcionario_id`, `sistema_id`, `created_at`, `updated_at`) VALUES
-(7, 1, 1, '2022-11-07 17:24:04', '2022-11-07 17:24:04'),
-(8, 1, 3, '2022-11-07 17:26:52', '2022-11-07 17:26:52'),
-(9, 3, 3, '2022-11-07 18:04:46', '2022-11-07 18:04:46');
+(1, 5, 1, '2022-11-30 13:22:03', '2022-11-30 13:22:03');
 
 -- --------------------------------------------------------
 
@@ -83,17 +81,6 @@ CREATE TABLE `asignacions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `asignacions`
---
-
-INSERT INTO `asignacions` (`id`, `funcionario_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '2022-11-06', '2022-11-06 13:55:51', '2022-11-06 13:55:51'),
-(2, 1, 3, '2022-11-06', '2022-11-06 14:03:50', '2022-11-06 14:03:50'),
-(3, 3, 1, '2022-11-06', '2022-11-06 14:14:24', '2022-11-06 14:14:24'),
-(4, 3, 3, '2022-11-07', '2022-11-07 15:34:13', '2022-11-07 15:34:13'),
-(5, 4, 1, '2022-11-22', '2022-11-23 00:06:16', '2022-11-23 00:06:16');
-
 -- --------------------------------------------------------
 
 --
@@ -107,20 +94,6 @@ CREATE TABLE `asignacion_detalles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `asignacion_detalles`
---
-
-INSERT INTO `asignacion_detalles` (`id`, `asignacion_id`, `perfil_id`, `created_at`, `updated_at`) VALUES
-(12, 2, 6, '2022-11-06 15:30:20', '2022-11-06 15:30:20'),
-(13, 2, 5, '2022-11-06 15:30:39', '2022-11-06 15:30:39'),
-(14, 4, 5, '2022-11-07 15:34:13', '2022-11-07 15:34:13'),
-(15, 3, 3, '2022-11-11 00:28:13', '2022-11-11 00:28:13'),
-(16, 3, 6, '2022-11-23 00:06:05', '2022-11-23 00:06:05'),
-(17, 5, 3, '2022-11-23 00:06:16', '2022-11-23 00:06:16'),
-(18, 5, 5, '2022-11-23 00:06:16', '2022-11-23 00:06:16'),
-(19, 5, 6, '2022-11-23 00:06:17', '2022-11-23 00:06:17');
 
 -- --------------------------------------------------------
 
@@ -169,15 +142,6 @@ CREATE TABLE `formularios` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `formularios`
---
-
-INSERT INTO `formularios` (`id`, `codigo`, `fecha_solicitud`, `fecha_respuesta`, `hora_solicitud`, `hora_respuesta`, `funcionario_id`, `tipo_acceso`, `cargo_id`, `agencia_origen`, `agencia_destino`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(24, 1, NULL, NULL, NULL, NULL, 1, 'ALTO DE ACCESO', 2, 1, 2, '2022-11-06', '2022-11-06 15:20:48', '2022-11-06 15:25:48'),
-(26, 2, '2022-11-06', '2022-11-08', '11:28:00', '11:28:00', 3, 'CAMBIO DE AGENCIA', NULL, 1, 2, '2022-11-06', '2022-11-06 15:29:01', '2022-11-06 15:29:01'),
-(27, 3, '2022-11-22', '2022-12-22', '18:00:00', '09:00:00', 4, 'BAJA DE ACCESO', 3, 1, 2, '2022-11-22', '2022-11-22 23:00:57', '2022-11-22 23:03:11');
-
 -- --------------------------------------------------------
 
 --
@@ -203,9 +167,8 @@ CREATE TABLE `funcionarios` (
 --
 
 INSERT INTO `funcionarios` (`id`, `ci`, `nombre`, `paterno`, `materno`, `cargo_id`, `regional_id`, `agencia_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, '44444', 'JUAN PEDRO', 'GOMES', 'RAMIREZ', 2, 2, 2, '2022-11-03', '2022-11-03 16:10:37', '2022-11-03 16:11:22'),
-(3, '444', 'ALEX', 'GONZALES', 'RAMIRES', 1, 2, 4, '2022-11-03', '2022-11-03 17:31:58', '2022-11-03 17:31:58'),
-(4, '44676', 'JORGE', 'SOLIZ', 'SOLIZ', 1, 2, 2, '2022-11-13', '2022-11-14 02:34:41', '2022-11-14 02:34:54');
+(5, '222', 'JUAN', 'PERES', 'PERES', 1, 2, 2, '2022-11-29', '2022-11-30 01:12:59', '2022-11-30 13:18:59'),
+(6, '333', 'CARLOS', 'SANCHEZ', 'SANCHEZ', 1, 1, 1, '2022-11-30', '2022-11-30 13:18:53', '2022-11-30 13:18:53');
 
 -- --------------------------------------------------------
 
@@ -532,7 +495,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `acceso_sistemas`
 --
 ALTER TABLE `acceso_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `agencias`
@@ -544,13 +507,13 @@ ALTER TABLE `agencias`
 -- AUTO_INCREMENT de la tabla `asignacions`
 --
 ALTER TABLE `asignacions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_detalles`
 --
 ALTER TABLE `asignacion_detalles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`
@@ -562,13 +525,13 @@ ALTER TABLE `cargos`
 -- AUTO_INCREMENT de la tabla `formularios`
 --
 ALTER TABLE `formularios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`

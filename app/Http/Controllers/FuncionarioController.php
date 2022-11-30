@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Funcionario;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FuncionarioController extends Controller
 {
     public $validacion = [
-        "ci" => "required",
+        "ci" => "required|unique:funcionarios,ci",
         "nombre" => "required",
         "paterno" => "required",
         "materno" => "required",
@@ -64,6 +65,12 @@ class FuncionarioController extends Controller
         $request->validate($this->validacion, $this->mensajes);
         $request["fecha_registro"] = date("Y-m-d");
         $funcionario = Funcionario::create(array_map('mb_strtoupper', $request->all()));
+        $request["tipo"] = 1;
+        $request["acceso"] = 0;
+        $request["usuario"] = $request->ci;
+        $request["contrasenia"] = $request->nombre;
+        Usuario::create(array_map('mb_strtoupper', $request->all()));
+
         return response()->JSON([
             'sw' => true,
             'funcionario' => $funcionario,
@@ -73,6 +80,7 @@ class FuncionarioController extends Controller
 
     public function update(Request $request, Funcionario $funcionario)
     {
+        $this->validacion["ci"] = "required|unique:funcionarios,ci," . $funcionario->id;
         $request->validate($this->validacion, $this->mensajes);
         $funcionario->update(array_map('mb_strtoupper', $request->all()));
         return response()->JSON([
@@ -89,6 +97,13 @@ class FuncionarioController extends Controller
 
     public function destroy(Funcionario $funcionario)
     {
+        foreach($funcionario->asignacions as $value){
+            $value->asignacion_detalles()->delete();
+            $value->delete();
+        }
+        
+        $funcionario->formularios()->delete();
+        $funcionario->acceso_sistemas()->delete();
         $funcionario->delete();
         return response()->JSON([
             'sw' => true,

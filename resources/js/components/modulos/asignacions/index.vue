@@ -26,7 +26,7 @@
                                     <div class="form-group col-md-12">
                                         <label>Funcionario</label>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <input
                                                     type="text"
                                                     class="form-control mb-1"
@@ -35,7 +35,15 @@
                                                     @keyup="buscaFuncionario"
                                                 />
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    v-model="nombre_funcionario"
+                                                    readonly
+                                                />
+                                            </div>
+                                            <!-- <div class="col-md-12">
                                                 <el-select
                                                     placeholder="Funcionario"
                                                     v-model="funcionario_id"
@@ -51,7 +59,7 @@
                                                     >
                                                     </el-option>
                                                 </el-select>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12">
@@ -141,6 +149,7 @@ export default {
             listFuncionarios: [],
             listSistemas: [],
             funcionario_id: "",
+            nombre_funcionario: "",
             cargo: "",
             sistema_id: "",
             listPerfilSistema: [],
@@ -193,11 +202,17 @@ export default {
                 );
                 if (existe.length > 0) {
                     this.funcionario_id = existe[0].id;
+                    this.nombre_funcionario = existe[0].full_name;
+                    this.cargo = existe[0].cargo.nombre;
                 } else {
                     this.funcionario_id = "";
+                    this.nombre_funcionario = "";
+                    this.cargo = "";
                 }
             } else {
                 this.funcionario_id = "";
+                this.nombre_funcionario = "";
+                this.cargo = "";
             }
         },
     },
