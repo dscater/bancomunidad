@@ -17,6 +17,9 @@ class AgenciaController extends Controller
     public function index(Request $request)
     {
         $agencias = Agencia::all();
+        if (isset($request->habilitados)) {
+            $agencias = Agencia::where("estado", 1)->get();
+        }
         return response()->JSON(['agencias' => $agencias, 'total' => count($agencias)], 200);
     }
 
@@ -51,7 +54,8 @@ class AgenciaController extends Controller
 
     public function destroy(Agencia $agencia)
     {
-        $agencia->delete();
+        $agencia->estado = 0;
+        $agencia->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'

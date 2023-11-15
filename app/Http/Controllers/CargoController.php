@@ -17,6 +17,9 @@ class CargoController extends Controller
     public function index(Request $request)
     {
         $cargos = Cargo::all();
+        if (isset($request->habilitados)) {
+            $cargos = Cargo::where("estado", 1)->get();
+        }
         return response()->JSON(['cargos' => $cargos, 'total' => count($cargos)], 200);
     }
 
@@ -51,7 +54,8 @@ class CargoController extends Controller
 
     public function destroy(Cargo $cargo)
     {
-        $cargo->delete();
+        $cargo->estado = 0;
+        $cargo->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'

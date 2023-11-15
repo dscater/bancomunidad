@@ -9,5 +9,5 @@ class Cargo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["nombre", "departamento", "fecha_registro"];
+    protected $fillable = ["nombre", "departamento", "fecha_registro", "estado"];
 }

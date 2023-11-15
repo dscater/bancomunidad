@@ -84,6 +84,22 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template #cell(estado)="row">
+                                                    <span
+                                                        class="badge"
+                                                        :class="[
+                                                            row.item.estado == 1
+                                                                ? 'badge-success'
+                                                                : 'badge-danger',
+                                                        ]"
+                                                    >
+                                                        {{
+                                                            row.item.estado == 1
+                                                                ? "HABILITADO"
+                                                                : "DESHABILITADO"
+                                                        }}</span
+                                                    >
+                                                </template>
                                                 <template
                                                     #cell(fecha_registro)="row"
                                                 >
@@ -125,7 +141,7 @@
                                                                 eliminaCargo(
                                                                     row.item.id,
                                                                     row.item
-                                                                        .full_name
+                                                                        .nombre
                                                                 )
                                                             "
                                                         >
@@ -208,6 +224,7 @@ export default {
                     label: "Fecha de registro",
                     sortable: true,
                 },
+                { key: "estado", label: "Estado", sortable: true },
                 { key: "accion", label: "Acción" },
             ],
             loading: true,
@@ -245,7 +262,9 @@ export default {
         editarRegistro(item) {
             this.oCargo.id = item.id;
             this.oCargo.nombre = item.nombre ? item.nombre : "";
-            this.oCargo.departamento = item.departamento ? item.departamento : "";
+            this.oCargo.departamento = item.departamento
+                ? item.departamento
+                : "";
             this.modal_accion = "edit";
             this.muestra_modal = true;
         },

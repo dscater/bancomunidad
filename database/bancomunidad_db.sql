@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 30-11-2022 a las 13:23:00
--- Versión del servidor: 5.7.33
--- Versión de PHP: 7.4.19
+-- Tiempo de generación: 15-11-2023 a las 18:13:11
+-- Versión del servidor: 8.0.30
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `acceso_sistemas` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `funcionario_id` bigint(20) UNSIGNED NOT NULL,
-  `sistema_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `funcionario_id` bigint UNSIGNED NOT NULL,
+  `sistema_id` bigint UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -49,9 +49,10 @@ INSERT INTO `acceso_sistemas` (`id`, `funcionario_id`, `sistema_id`, `created_at
 --
 
 CREATE TABLE `agencias` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_registro` date NOT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -60,11 +61,11 @@ CREATE TABLE `agencias` (
 -- Volcado de datos para la tabla `agencias`
 --
 
-INSERT INTO `agencias` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 'AGENCIA 1', '2022-11-03', '2022-11-03 19:10:30', '2022-11-03 19:10:30'),
-(2, 'AGENCIA  2', '2022-11-03', '2022-11-03 19:10:42', '2022-11-03 19:10:42'),
-(4, 'AGENCIA 3', '2022-11-03', '2022-11-03 16:10:33', '2022-11-03 16:10:33'),
-(6, 'AGENCIA 11', '2022-11-13', '2022-11-14 02:45:43', '2022-11-14 02:45:43');
+INSERT INTO `agencias` (`id`, `nombre`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 'AGENCIA 1', '2022-11-03', 0, '2022-11-03 19:10:30', '2023-11-15 18:07:17'),
+(2, 'AGENCIA  2', '2022-11-03', 1, '2022-11-03 19:10:42', '2022-11-03 19:10:42'),
+(4, 'AGENCIA 3', '2022-11-03', 1, '2022-11-03 16:10:33', '2022-11-03 16:10:33'),
+(6, 'AGENCIA 11', '2022-11-13', 1, '2022-11-14 02:45:43', '2022-11-14 02:45:43');
 
 -- --------------------------------------------------------
 
@@ -73,9 +74,9 @@ INSERT INTO `agencias` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated
 --
 
 CREATE TABLE `asignacions` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `funcionario_id` bigint(20) UNSIGNED NOT NULL,
-  `sistema_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `funcionario_id` bigint UNSIGNED NOT NULL,
+  `sistema_id` bigint UNSIGNED NOT NULL,
   `fecha_registro` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -88,9 +89,9 @@ CREATE TABLE `asignacions` (
 --
 
 CREATE TABLE `asignacion_detalles` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `asignacion_id` bigint(20) UNSIGNED NOT NULL,
-  `perfil_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `asignacion_id` bigint UNSIGNED NOT NULL,
+  `perfil_id` bigint UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -102,10 +103,11 @@ CREATE TABLE `asignacion_detalles` (
 --
 
 CREATE TABLE `cargos` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `departamento` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `departamento` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_registro` date NOT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -114,10 +116,10 @@ CREATE TABLE `cargos` (
 -- Volcado de datos para la tabla `cargos`
 --
 
-INSERT INTO `cargos` (`id`, `nombre`, `departamento`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 'CARGO 1', 'ADM Y RRHH', '2022-11-03', '2022-11-03 19:03:55', '2022-11-03 19:03:55'),
-(2, 'CARGO 2', 'OPERACIONES', '2022-11-03', '2022-11-03 19:04:25', '2022-11-03 19:04:25'),
-(3, 'CARGO 3', 'AUDITORÍA INTERNA', '2022-11-03', '2022-11-03 19:04:41', '2022-11-03 19:04:41');
+INSERT INTO `cargos` (`id`, `nombre`, `departamento`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 'CARGO 1', 'ADM Y RRHH', '2022-11-03', 0, '2022-11-03 19:03:55', '2023-11-15 18:05:41'),
+(2, 'CARGO 2', 'OPERACIONES', '2022-11-03', 1, '2022-11-03 19:04:25', '2022-11-03 19:04:25'),
+(3, 'CARGO 3', 'AUDITORÍA INTERNA', '2022-11-03', 1, '2022-11-03 19:04:41', '2022-11-03 19:04:41');
 
 -- --------------------------------------------------------
 
@@ -126,21 +128,29 @@ INSERT INTO `cargos` (`id`, `nombre`, `departamento`, `fecha_registro`, `created
 --
 
 CREATE TABLE `formularios` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `codigo` bigint(20) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `codigo` bigint NOT NULL,
   `fecha_solicitud` date DEFAULT NULL,
   `fecha_respuesta` date DEFAULT NULL,
   `hora_solicitud` time DEFAULT NULL,
   `hora_respuesta` time DEFAULT NULL,
-  `funcionario_id` bigint(20) UNSIGNED NOT NULL,
-  `tipo_acceso` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cargo_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `agencia_origen` bigint(20) UNSIGNED DEFAULT NULL,
-  `agencia_destino` bigint(20) UNSIGNED DEFAULT NULL,
+  `funcionario_id` bigint UNSIGNED NOT NULL,
+  `tipo_acceso` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cargo_id` bigint UNSIGNED DEFAULT NULL,
+  `agencia_origen` bigint UNSIGNED DEFAULT NULL,
+  `agencia_destino` bigint UNSIGNED DEFAULT NULL,
   `fecha_registro` date DEFAULT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `formularios`
+--
+
+INSERT INTO `formularios` (`id`, `codigo`, `fecha_solicitud`, `fecha_respuesta`, `hora_solicitud`, `hora_respuesta`, `funcionario_id`, `tipo_acceso`, `cargo_id`, `agencia_origen`, `agencia_destino`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 1, '2023-11-15', '2023-11-20', '08:00:00', NULL, 6, 'ALTO DE ACCESO', 1, NULL, NULL, '2023-11-15', 1, '2023-11-15 17:56:57', '2023-11-15 18:12:02');
 
 -- --------------------------------------------------------
 
@@ -149,15 +159,16 @@ CREATE TABLE `formularios` (
 --
 
 CREATE TABLE `funcionarios` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `ci` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `paterno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `materno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cargo_id` bigint(20) UNSIGNED NOT NULL,
-  `regional_id` bigint(20) UNSIGNED NOT NULL,
-  `agencia_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `ci` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `paterno` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `materno` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cargo_id` bigint UNSIGNED NOT NULL,
+  `regional_id` bigint UNSIGNED NOT NULL,
+  `agencia_id` bigint UNSIGNED NOT NULL,
   `fecha_registro` date NOT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -166,9 +177,9 @@ CREATE TABLE `funcionarios` (
 -- Volcado de datos para la tabla `funcionarios`
 --
 
-INSERT INTO `funcionarios` (`id`, `ci`, `nombre`, `paterno`, `materno`, `cargo_id`, `regional_id`, `agencia_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(5, '222', 'JUAN', 'PERES', 'PERES', 1, 2, 2, '2022-11-29', '2022-11-30 01:12:59', '2022-11-30 13:18:59'),
-(6, '333', 'CARLOS', 'SANCHEZ', 'SANCHEZ', 1, 1, 1, '2022-11-30', '2022-11-30 13:18:53', '2022-11-30 13:18:53');
+INSERT INTO `funcionarios` (`id`, `ci`, `nombre`, `paterno`, `materno`, `cargo_id`, `regional_id`, `agencia_id`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(5, '222', 'JUAN', 'PERES', 'PERES', 1, 2, 2, '2022-11-29', 1, '2022-11-30 01:12:59', '2022-11-30 13:18:59'),
+(6, '333', 'CARLOS', 'SANCHEZ', 'SANCHEZ', 1, 1, 1, '2022-11-30', 0, '2022-11-30 13:18:53', '2023-11-15 18:06:56');
 
 -- --------------------------------------------------------
 
@@ -177,9 +188,9 @@ INSERT INTO `funcionarios` (`id`, `ci`, `nombre`, `paterno`, `materno`, `cargo_i
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -209,9 +220,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `opcion_sistemas` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `sistema_id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `sistema_id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -234,8 +245,8 @@ INSERT INTO `opcion_sistemas` (`id`, `sistema_id`, `nombre`, `created_at`, `upda
 --
 
 CREATE TABLE `perfils` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_registro` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -257,10 +268,11 @@ INSERT INTO `perfils` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_
 --
 
 CREATE TABLE `perfil_sistemas` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `perfil_id` bigint(20) UNSIGNED NOT NULL,
-  `sistema_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `perfil_id` bigint UNSIGNED NOT NULL,
+  `sistema_id` bigint UNSIGNED NOT NULL,
   `fecha_registro` date DEFAULT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -269,13 +281,13 @@ CREATE TABLE `perfil_sistemas` (
 -- Volcado de datos para la tabla `perfil_sistemas`
 --
 
-INSERT INTO `perfil_sistemas` (`id`, `perfil_id`, `sistema_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, '2022-11-03', '2022-11-03 16:59:37', '2022-11-03 16:59:37'),
-(2, 5, 3, '2022-11-03', '2022-11-03 17:02:53', '2022-11-03 17:02:53'),
-(3, 6, 3, '2022-11-03', '2022-11-03 17:56:30', '2022-11-03 17:56:30'),
-(4, 5, 7, '2022-11-22', '2022-11-22 23:48:52', '2022-11-22 23:48:52'),
-(5, 5, 1, '2022-11-22', '2022-11-23 00:05:44', '2022-11-23 00:05:44'),
-(6, 6, 1, '2022-11-22', '2022-11-23 00:05:49', '2022-11-23 00:05:49');
+INSERT INTO `perfil_sistemas` (`id`, `perfil_id`, `sistema_id`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 3, 1, '2022-11-03', 1, '2022-11-03 16:59:37', '2023-11-15 17:56:13'),
+(2, 5, 3, '2022-11-03', 1, '2022-11-03 17:02:53', '2022-11-03 17:02:53'),
+(3, 6, 3, '2022-11-03', 1, '2022-11-03 17:56:30', '2022-11-03 17:56:30'),
+(4, 5, 7, '2022-11-22', 1, '2022-11-22 23:48:52', '2022-11-22 23:48:52'),
+(5, 5, 1, '2022-11-22', 1, '2022-11-23 00:05:44', '2022-11-23 00:05:44'),
+(6, 6, 1, '2022-11-22', 1, '2022-11-23 00:05:49', '2022-11-23 00:05:49');
 
 -- --------------------------------------------------------
 
@@ -284,12 +296,12 @@ INSERT INTO `perfil_sistemas` (`id`, `perfil_id`, `sistema_id`, `fecha_registro`
 --
 
 CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `id` bigint UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -302,9 +314,10 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 CREATE TABLE `regionals` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_registro` date NOT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -313,13 +326,13 @@ CREATE TABLE `regionals` (
 -- Volcado de datos para la tabla `regionals`
 --
 
-INSERT INTO `regionals` (`id`, `nombre`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 'REGIONAL 1', '2022-11-03', '2022-11-03 19:11:29', '2022-11-03 19:11:39'),
-(2, 'REGIONAL 2', '2022-11-03', '2022-11-03 19:11:42', '2022-11-03 19:11:42'),
-(4, 'REGIONAL 3', '2022-11-03', '2022-11-03 19:53:17', '2022-11-03 19:53:17'),
-(6, 'REGIONAL 13', '2022-11-13', '2022-11-14 02:45:41', '2022-11-14 02:46:00'),
-(7, 'REGIONAL 4', '2022-11-13', '2022-11-14 03:17:44', '2022-11-14 03:17:44'),
-(8, 'REGIONAL 14', '2022-11-16', '2022-11-16 18:14:06', '2022-11-16 18:14:06');
+INSERT INTO `regionals` (`id`, `nombre`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 'REGIONAL 1', '2022-11-03', 1, '2022-11-03 19:11:29', '2023-11-15 17:52:44'),
+(2, 'REGIONAL 2', '2022-11-03', 1, '2022-11-03 19:11:42', '2022-11-03 19:11:42'),
+(4, 'REGIONAL 3', '2022-11-03', 1, '2022-11-03 19:53:17', '2022-11-03 19:53:17'),
+(6, 'REGIONAL 13', '2022-11-13', 1, '2022-11-14 02:45:41', '2022-11-14 02:46:00'),
+(7, 'REGIONAL 4', '2022-11-13', 1, '2022-11-14 03:17:44', '2022-11-14 03:17:44'),
+(8, 'REGIONAL 14', '2022-11-16', 1, '2022-11-16 18:14:06', '2022-11-16 18:14:06');
 
 -- --------------------------------------------------------
 
@@ -328,14 +341,15 @@ INSERT INTO `regionals` (`id`, `nombre`, `fecha_registro`, `created_at`, `update
 --
 
 CREATE TABLE `sistemas` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `objetivo` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `version` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `objetivo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_produccion` date NOT NULL,
-  `empresa_proveedora` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `empresa_proveedora` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_registro` date NOT NULL,
+  `estado` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -344,11 +358,11 @@ CREATE TABLE `sistemas` (
 -- Volcado de datos para la tabla `sistemas`
 --
 
-INSERT INTO `sistemas` (`id`, `nombre`, `objetivo`, `version`, `tipo`, `fecha_produccion`, `empresa_proveedora`, `fecha_registro`, `created_at`, `updated_at`) VALUES
-(1, 'SISTEMA 1', 'OBJETIVO DEL SISTEMA 1', '1.0.0', 'EXTERNO', '2022-01-03', 'PROVEEDOR', '2022-11-03', '2022-11-03 16:29:03', '2022-11-03 16:29:30'),
-(3, 'SISTEMA 2', 'OBJETIVO SISTEMA 2', '1.1', 'INTERNO', '2022-04-04', '', '2022-11-03', '2022-11-03 17:02:46', '2022-11-03 17:02:46'),
-(4, 'SISTEMA 3', 'OBJETIVO DE PRUEBA 3', '11', 'EXTERNO', '2022-11-13', 'EMPRESA PROVEEDORA', '2022-11-13', '2022-11-14 03:36:58', '2022-11-14 03:36:58'),
-(7, 'SISTEMA CON OPCIONES', 'CREAR SISTEMA CON OPCIONES', '1', 'EXTERNO', '2022-11-22', 'EMPRESA PROVEEDORA', '2022-11-22', '2022-11-22 23:38:14', '2022-11-22 23:38:14');
+INSERT INTO `sistemas` (`id`, `nombre`, `objetivo`, `version`, `tipo`, `fecha_produccion`, `empresa_proveedora`, `fecha_registro`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 'SISTEMA 1', 'OBJETIVO DEL SISTEMA 1', '1.0.0', 'EXTERNO', '2022-01-03', 'PROVEEDOR', '2022-11-03', 0, '2022-11-03 16:29:03', '2023-11-15 18:09:33'),
+(3, 'SISTEMA 2', 'OBJETIVO SISTEMA 2', '1.1', 'INTERNO', '2022-04-04', '', '2022-11-03', 1, '2022-11-03 17:02:46', '2022-11-03 17:02:46'),
+(4, 'SISTEMA 3', 'OBJETIVO DE PRUEBA 3', '11', 'EXTERNO', '2022-11-13', 'EMPRESA PROVEEDORA', '2022-11-13', 1, '2022-11-14 03:36:58', '2022-11-14 03:36:58'),
+(7, 'SISTEMA CON OPCIONES', 'CREAR SISTEMA CON OPCIONES', '1', 'EXTERNO', '2022-11-22', 'EMPRESA PROVEEDORA', '2022-11-22', 1, '2022-11-22 23:38:14', '2022-11-22 23:38:14');
 
 -- --------------------------------------------------------
 
@@ -357,10 +371,10 @@ INSERT INTO `sistemas` (`id`, `nombre`, `objetivo`, `version`, `tipo`, `fecha_pr
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `usuario` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `usuario` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -495,91 +509,91 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `acceso_sistemas`
 --
 ALTER TABLE `acceso_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `agencias`
 --
 ALTER TABLE `agencias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacions`
 --
 ALTER TABLE `asignacions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_detalles`
 --
 ALTER TABLE `asignacion_detalles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`
 --
 ALTER TABLE `cargos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `formularios`
 --
 ALTER TABLE `formularios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `funcionarios`
 --
 ALTER TABLE `funcionarios`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `opcion_sistemas`
 --
 ALTER TABLE `opcion_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `perfils`
 --
 ALTER TABLE `perfils`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `perfil_sistemas`
 --
 ALTER TABLE `perfil_sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `regionals`
 --
 ALTER TABLE `regionals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `sistemas`
 --
 ALTER TABLE `sistemas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas

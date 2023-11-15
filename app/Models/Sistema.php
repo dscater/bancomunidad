@@ -11,7 +11,7 @@ class Sistema extends Model
 
     protected $fillable = [
         "nombre", "objetivo", "version", "tipo",
-        "fecha_produccion", "empresa_proveedora", "fecha_registro",
+        "fecha_produccion", "empresa_proveedora", "fecha_registro", "estado"
     ];
 
     public function perfiles()

@@ -23,6 +23,10 @@ class SistemaController extends Controller
     public function index(Request $request)
     {
         $sistemas = Sistema::with("opciones")->get();
+        if (isset($request->habilitados)) {
+            $sistemas = Sistema::with("opciones")->where("estado", 1)->get();
+        }
+
         return response()->JSON(['sistemas' => $sistemas, 'total' => count($sistemas)], 200);
     }
 
@@ -95,9 +99,10 @@ class SistemaController extends Controller
 
     public function destroy(Sistema $sistema)
     {
-        $sistema->perfiles()->delete();
-        $sistema->opciones()->delete();
-        $sistema->delete();
+        // $sistema->perfiles()->delete();
+        // $sistema->opciones()->delete();
+        $sistema->estado = 0;
+        $sistema->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'

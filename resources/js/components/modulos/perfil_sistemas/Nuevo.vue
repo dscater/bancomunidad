@@ -437,6 +437,20 @@ export default {
                                 this.perfil_sistema[
                                     modulo.slice(0, -1) + "_id"
                                 ] = "";
+                            })
+                            .catch((error) => {
+                                if (error.response) {
+                                    if (error.response.status === 422) {
+                                        this.errors =
+                                            error.response.data.errors;
+                                    }
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: error.response.data.message,
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                    });
+                                }
                             });
                     }
                 });

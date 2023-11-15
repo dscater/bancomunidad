@@ -9,7 +9,7 @@ class PerfilSistema extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["perfil_id", "sistema_id", "fecha_registro"];
+    protected $fillable = ["perfil_id", "sistema_id", "fecha_registro", "estado"];
 
     protected $with = ["perfil", "sistema"];
 

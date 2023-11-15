@@ -50,7 +50,8 @@ class RegionalController extends Controller
 
     public function destroy(Regional $regional)
     {
-        $regional->delete();
+        $regional->estado = 0;
+        $regional->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'

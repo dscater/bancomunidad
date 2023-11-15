@@ -84,6 +84,22 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template #cell(estado)="row">
+                                                    <span
+                                                        class="badge"
+                                                        :class="[
+                                                            row.item.estado == 1
+                                                                ? 'badge-success'
+                                                                : 'badge-danger',
+                                                        ]"
+                                                    >
+                                                        {{
+                                                            row.item.estado == 1
+                                                                ? "HABILITADO"
+                                                                : "DESHABILITADO"
+                                                        }}</span
+                                                    >
+                                                </template>
                                                 <template
                                                     #cell(fecha_registro)="row"
                                                 >
@@ -125,7 +141,12 @@
                                                                 eliminaPerfilSistema(
                                                                     row.item.id,
                                                                     row.item
-                                                                        .full_name
+                                                                        .sistema
+                                                                        .nombre +
+                                                                        ' - ' +
+                                                                        row.item
+                                                                            .perfil
+                                                                            .nombre
                                                                 )
                                                             "
                                                         >
@@ -202,6 +223,7 @@ export default {
                     label: "Perfil",
                     sortable: true,
                 },
+                { key: "estado", label: "Estado", sortable: true },
                 {
                     key: "fecha_registro",
                     label: "Fecha de registro",

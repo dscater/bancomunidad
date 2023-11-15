@@ -93,6 +93,22 @@
                                                 empty-filtered-text="Sin resultados"
                                                 :filter="filter"
                                             >
+                                                <template #cell(estado)="row">
+                                                    <span
+                                                        class="badge"
+                                                        :class="[
+                                                            row.item.estado == 1
+                                                                ? 'badge-success'
+                                                                : 'badge-danger',
+                                                        ]"
+                                                    >
+                                                        {{
+                                                            row.item.estado == 1
+                                                                ? "HABILITADO"
+                                                                : "DESHABILITADO"
+                                                        }}</span
+                                                    >
+                                                </template>
                                                 <template #cell(detalle)="row">
                                                     <template
                                                         v-if="
@@ -312,6 +328,11 @@ export default {
                 {
                     key: "detalle",
                     label: "Detalle",
+                    sortable: true,
+                },
+                {
+                    key: "estado",
+                    label: "Estado",
                     sortable: true,
                 },
                 {

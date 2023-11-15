@@ -50,7 +50,8 @@ class PerfilSistemaController extends Controller
 
     public function destroy(PerfilSistema $perfil_sistema)
     {
-        $perfil_sistema->delete();
+        $perfil_sistema->estado = 0;
+        $perfil_sistema->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'

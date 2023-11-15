@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Regional extends Model
 {
     use HasFactory;
-    protected $fillable = ["nombre", "fecha_registro"];
+    protected $fillable = ["nombre", "fecha_registro", "estado"];
 }

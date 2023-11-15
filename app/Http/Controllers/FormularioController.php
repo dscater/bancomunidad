@@ -111,7 +111,8 @@ class FormularioController extends Controller
 
     public function destroy(Formulario $formulario)
     {
-        $formulario->delete();
+        $formulario->estado = 0;
+        $formulario->save();
         return response()->JSON([
             'sw' => true,
             'msj' => 'El registro se eliminó correctamente'
@@ -184,17 +185,17 @@ class FormularioController extends Controller
         $fila = 1;
 
         $sheet->setCellValue('A' . $fila, 'FORMULARIOS');
-        $sheet->getStyle('A' . $fila . ':K' . $fila)->getAlignment()->setHorizontal('center');;
-        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleTexto);
-        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
+        $sheet->getStyle('A' . $fila . ':L' . $fila)->getAlignment()->setHorizontal('center');;
+        $sheet->getStyle('A' . $fila . ':L' . $fila)->applyFromArray($styleTexto);
+        $sheet->mergeCells("A" . $fila . ":L" . $fila);  //COMBINAR CELDAS
         $fila++;
         $sheet->setCellValue('A' . $fila, 'EXPEDIDO: ' . date('Y-m-d'));
-        $sheet->getStyle('A' . $fila . ':K' . $fila)->getAlignment()->setHorizontal('center');;
-        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
-        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleTexto);
+        $sheet->getStyle('A' . $fila . ':L' . $fila)->getAlignment()->setHorizontal('center');;
+        $sheet->mergeCells("A" . $fila . ":L" . $fila);  //COMBINAR CELDAS
+        $sheet->getStyle('A' . $fila . ':L' . $fila)->applyFromArray($styleTexto);
         $fila++;
 
-        $sheet->mergeCells("A" . $fila . ":K" . $fila);  //COMBINAR CELDAS
+        $sheet->mergeCells("A" . $fila . ":L" . $fila);  //COMBINAR CELDAS
         $fila++;
 
         // ENCABEZADO
@@ -208,9 +209,10 @@ class FormularioController extends Controller
         $sheet->setCellValue('H' . $fila, 'AGENCIA ORIGEN');
         $sheet->setCellValue('I' . $fila, 'AGENCIA DESTINO');
         $sheet->setCellValue('J' . $fila, 'CARGO');
-        $sheet->setCellValue('K' . $fila, 'FECHA DE REGISTRO');
+        $sheet->setCellValue('K' . $fila, 'ESTADO');
+        $sheet->setCellValue('L' . $fila, 'FECHA DE REGISTRO');
         // $sheet->setWidth(['A' =>  5, 'B' =>  10, 'C' => 10, 'D' => 10, 'E' => 10, 'F' => 10, 'G' => 10, 'H' => 10, 'I' => 10, 'k' => 10, 'K' => 10, 'L' => 10, 'M' => 10, 'N' => 10, 'O' => 10, 'P' => 10, 'Q' => 10, 'R' => 10, 'S' => 10]);
-        $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($styleArray);
+        $sheet->getStyle('A' . $fila . ':L' . $fila)->applyFromArray($styleArray);
         $fila++;
 
         $cont = 1;
@@ -229,19 +231,20 @@ class FormularioController extends Controller
             } else {
                 $sheet->setCellValue('J' . $fila, $formulario->cargo->nombre);
             }
-            $sheet->setCellValue('K' . $fila, date("d/m/Y", strtotime($formulario->fecha_registro)));
+            $sheet->setCellValue('K' . $fila, $formulario->estado == 1 ? 'HABILITADO' : 'DESHABILITADO');
+            $sheet->setCellValue('L' . $fila, date("d/m/Y", strtotime($formulario->fecha_registro)));
 
-            $sheet->getStyle('A' . $fila . ':K' . $fila)->applyFromArray($estilo_conenido);
+            $sheet->getStyle('A' . $fila . ':L' . $fila)->applyFromArray($estilo_conenido);
             $fila++;
         }
 
         // $sheet->getRowDimension(6)->setRowHeight(-1);
         // AJUSTAR EL ANCHO DE LAS CELDAS
-        foreach (range('A', 'K') as $columnID) {
+        foreach (range('A', 'L') as $columnID) {
             $sheet->getStyle($columnID)->getAlignment()->setWrapText(true);
             $sheet->getColumnDimension($columnID)
                 ->setAutoSize(true);
-            if ($columnID == 'K') {
+            if ($columnID == 'L') {
             } else {
                 // $sheet->getColumnDimension($columnID)
                 //     ->setAutoSize(true);

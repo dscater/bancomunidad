@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perfil;
+use App\Models\PerfilSistema;
+use Exception;
 use Illuminate\Http\Request;
 
 class PerfilController extends Controller
@@ -47,6 +49,11 @@ class PerfilController extends Controller
 
     public function destroy(Perfil $perfil)
     {
+        $existe = PerfilSistema::where("perfil_id", $perfil->id)->get();
+        if (count($existe) > 0) {
+            throw new Exception("No es posible eliminar el registro debido a que esta siendo utilizado");
+        }
+
         $perfil->delete();
         return response()->JSON([
             'sw' => true,
