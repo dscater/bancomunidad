@@ -16,6 +16,13 @@ class Formulario extends Model
 
     protected $with = ["cargo", "funcionario", "origen", "destino"];
 
+    protected $appends = ["estado_txt"];
+
+    public function getEstadoTxtAttribute()
+    {
+        return $this->estado == 1 ? 'HABILITADO' : 'DESHABILITADO';
+    }
+
     public function funcionario()
     {
         return $this->belongsTo(Funcionario::class, 'funcionario_id');

@@ -6,6 +6,7 @@ use App\Models\Funcionario;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FuncionarioController extends Controller
 {
@@ -33,6 +34,17 @@ class FuncionarioController extends Controller
         $funcionarios = Funcionario::orderBy("nombre", "asc");
         if (isset($filter_ci) &&  trim($filter_ci) != "") {
             $funcionarios->where("ci", "LIKE", "%$filter_ci%");
+            $estado = 2;
+            $cadena = mb_strtolower(trim($filter_ci));
+            if ($cadena == "deshabilitado") {
+                $estado = 0;
+            }
+            if ($cadena == "habilitado") {
+                $estado = 1;
+            }
+            if ($estado != 2) {
+                $funcionarios->orWhere("estado", $estado);
+            }
         }
 
         if (isset($filter_nombre) &&  trim($filter_nombre) != "") {

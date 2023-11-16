@@ -52,6 +52,7 @@
                                                     v-model="filter"
                                                     type="search"
                                                     placeholder="Buscar"
+                                                    @keyup="filtraEstado"
                                                 ></b-form-input>
 
                                                 <b-input-group-append>
@@ -59,7 +60,10 @@
                                                         class="bg-primary"
                                                         variant="primary"
                                                         :disabled="!filter"
-                                                        @click="filter = ''"
+                                                        @click="
+                                                            filter = '';
+                                                            filtraEstado();
+                                                        "
                                                         >Borrar</b-button
                                                     >
                                                 </b-input-group-append>
@@ -255,11 +259,28 @@ export default {
             filter: null,
         };
     },
+    watch: {
+        filter(newVal) {
+            if (newVal.trim() == "") {
+                this.getAgencias();
+            }
+        },
+    },
     mounted() {
         this.getAgencias();
         this.loadingWindow.close();
     },
     methods: {
+        filtraEstado() {
+            if (
+                this.filter.toLowerCase() == "deshabilitado" ||
+                this.filter.toLowerCase() == "habilitado"
+            ) {
+                this.getAgencias(1);
+            } else {
+                this.getAgencias();
+            }
+        },
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
             this.oAgencia.id = item.id;
@@ -269,18 +290,20 @@ export default {
         },
 
         // Listar Agencias
-        getAgencias() {
+        getAgencias(filtra_estado = 0) {
             this.showOverlay = true;
             this.muestra_modal = false;
             let url = "/admin/agencias";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
-            axios.get(url).then((res) => {
-                this.showOverlay = false;
-                this.listRegistros = res.data.agencias;
-                this.totalRows = res.data.total;
-            });
+            axios
+                .get(url, { params: { filtra_estado, estado: this.filter } })
+                .then((res) => {
+                    this.showOverlay = false;
+                    this.listRegistros = res.data.agencias;
+                    this.totalRows = res.data.total;
+                });
         },
         eliminaAgencia(id, descripcion) {
             Swal.fire({

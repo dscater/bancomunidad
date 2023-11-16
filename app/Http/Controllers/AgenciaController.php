@@ -20,6 +20,18 @@ class AgenciaController extends Controller
         if (isset($request->habilitados)) {
             $agencias = Agencia::where("estado", 1)->get();
         }
+        if (isset($request->filtra_estado) && $request->filtra_estado == 1) {
+            $estado_txt = mb_strtolower($request->estado);
+            $estado = 2;
+            if ($estado_txt == "habilitado") {
+                $estado = 1;
+            }
+            if ($estado_txt == "deshabilitado") {
+                $estado = 0;
+            }
+            $agencias = Agencia::where("estado", $estado)->get();
+        }
+
         return response()->JSON(['agencias' => $agencias, 'total' => count($agencias)], 200);
     }
 

@@ -52,6 +52,7 @@
                                                     v-model="filter"
                                                     type="search"
                                                     placeholder="Buscar"
+                                                    @keyup="filtraEstado"
                                                 ></b-form-input>
 
                                                 <b-input-group-append>
@@ -59,7 +60,10 @@
                                                         class="bg-primary"
                                                         variant="primary"
                                                         :disabled="!filter"
-                                                        @click="filter = ''"
+                                                        @click="
+                                                            filter = '';
+                                                            filtraEstado();
+                                                        "
                                                         >Borrar</b-button
                                                     >
                                                 </b-input-group-append>
@@ -261,7 +265,24 @@ export default {
         this.loadingWindow.close();
         this.getPerfilSistemas();
     },
+    watch: {
+        filter(newVal) {
+            if (newVal.trim() == "") {
+                this.getPerfilSistemas();
+            }
+        },
+    },
     methods: {
+        filtraEstado() {
+            if (
+                this.filter.toLowerCase() == "deshabilitado" ||
+                this.filter.toLowerCase() == "habilitado"
+            ) {
+                this.getPerfilSistemas(1);
+            } else {
+                this.getPerfilSistemas();
+            }
+        },
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
             this.oPerfilSistema.id = item.id;
@@ -277,7 +298,7 @@ export default {
         },
 
         // Listar PerfilSistemas
-        getPerfilSistemas() {
+        getPerfilSistemas(filtra_estado = 0) {
             this.showOverlay = true;
             this.muestra_modal = false;
             let url = "/admin/perfil_sistemas";
@@ -286,7 +307,11 @@ export default {
             }
             axios
                 .get(url, {
-                    params: { per_page: this.per_page },
+                    params: {
+                        per_page: this.per_page,
+                        filtra_estado,
+                        estado: this.filter,
+                    },
                 })
                 .then((res) => {
                     this.showOverlay = false;

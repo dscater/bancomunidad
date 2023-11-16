@@ -19,6 +19,17 @@ class FormularioController extends Controller
     public function index(Request $request)
     {
         $formularios = Formulario::all();
+        if (isset($request->filtra_estado) && $request->filtra_estado == 1) {
+            $estado_txt = mb_strtolower($request->estado);
+            $estado = 2;
+            if ($estado_txt == "habilitado") {
+                $estado = 1;
+            }
+            if ($estado_txt == "deshabilitado") {
+                $estado = 0;
+            }
+            $formularios = Formulario::where("estado", $estado)->get();
+        }
         return response()->JSON(['formularios' => $formularios, 'total' => count($formularios)], 200);
     }
 
@@ -26,7 +37,7 @@ class FormularioController extends Controller
     {
         if (isset($request->tipo_acceso) && $request->tipo_acceso != "") {
             if (
-                $request->tipo_acceso == "ALTO DE ACCESO" ||
+                $request->tipo_acceso == "ALTA DE ACCESO" ||
                 $request->tipo_acceso == 'BAJA DE ACCESO'
             ) {
                 $this->validacion["cargo_id"] = "required";
@@ -68,7 +79,7 @@ class FormularioController extends Controller
     {
         if (isset($request->tipo_acceso) && $request->tipo_acceso != "") {
             if (
-                $request->tipo_acceso == "ALTO DE ACCESO" ||
+                $request->tipo_acceso == "ALTA DE ACCESO" ||
                 $request->tipo_acceso == 'BAJA DE ACCESO'
             ) {
                 $this->validacion["cargo_id"] = "required";

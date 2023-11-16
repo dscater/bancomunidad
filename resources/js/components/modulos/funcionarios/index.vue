@@ -45,7 +45,7 @@
                                                 class="form-control"
                                                 v-model="filter_ci"
                                                 @keyup="getFuncionarios"
-                                                placeholder="C.I."
+                                                placeholder="C.I. / Estado"
                                             />
                                         </div>
                                     </b-col>

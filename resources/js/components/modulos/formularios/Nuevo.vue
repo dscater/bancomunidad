@@ -162,7 +162,7 @@
                                     :class="{
                                         'text-danger': errors.tipo_acceso,
                                     }"
-                                    >Tipode acceso*</label
+                                    >Tipo de acceso*</label
                                 >
                                 <el-select
                                     class="w-full"
@@ -173,7 +173,7 @@
                                 >
                                     <el-option
                                         v-for="item in [
-                                            'ALTO DE ACCESO',
+                                            'ALTA DE ACCESO',
                                             'BAJA DE ACCESO',
                                             'CAMBIO DE AGENCIA',
                                         ]"
@@ -265,7 +265,7 @@
                                 v-if="
                                     (formulario.tipo_acceso != '' &&
                                         formulario.tipo_acceso ==
-                                            'ALTO DE ACCESO') ||
+                                            'ALTA DE ACCESO') ||
                                     formulario.tipo_acceso == 'BAJA DE ACCESO'
                                 "
                             >

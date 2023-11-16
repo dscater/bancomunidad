@@ -61,6 +61,7 @@
                                                     v-model="filter"
                                                     type="search"
                                                     placeholder="Buscar"
+                                                    @keyup="filtraEstado"
                                                 ></b-form-input>
 
                                                 <b-input-group-append>
@@ -68,7 +69,10 @@
                                                         class="bg-primary"
                                                         variant="primary"
                                                         :disabled="!filter"
-                                                        @click="filter = ''"
+                                                        @click="
+                                                            filter = '';
+                                                            filtraEstado();
+                                                        "
                                                         >Borrar</b-button
                                                     >
                                                 </b-input-group-append>
@@ -114,7 +118,7 @@
                                                         v-if="
                                                             row.item
                                                                 .tipo_acceso ==
-                                                                'ALTO DE ACCESO' ||
+                                                                'ALTA DE ACCESO' ||
                                                             row.item
                                                                 .tipo_acceso ==
                                                                 'BAJA DE ACCESO'
@@ -135,7 +139,7 @@
                                                                 >Agencia origen: </strong
                                                             ><br />{{
                                                                 row.item.origen
-                                                                    .nombre
+                                                                    ?.nombre
                                                             }}
                                                         </p>
                                                         <p>
@@ -144,7 +148,7 @@
                                                                 destino: </strong
                                                             ><br />{{
                                                                 row.item.destino
-                                                                    .nombre
+                                                                    ?.nombre
                                                             }}
                                                         </p>
                                                     </template>
@@ -380,7 +384,24 @@ export default {
         this.loadingWindow.close();
         this.getFormularios();
     },
+    watch: {
+        filter(newVal) {
+            if (newVal.trim() == "") {
+                this.getFormularios();
+            }
+        },
+    },
     methods: {
+        filtraEstado() {
+            if (
+                this.filter.toLowerCase() == "deshabilitado" ||
+                this.filter.toLowerCase() == "habilitado"
+            ) {
+                this.getFormularios(1);
+            } else {
+                this.getFormularios();
+            }
+        },
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
             this.oFormulario.id = item.id;
@@ -446,7 +467,7 @@ export default {
         },
 
         // Listar Formularios
-        getFormularios() {
+        getFormularios(filtra_estado = 0) {
             this.showOverlay = true;
             this.muestra_modal = false;
             let url = "/admin/formularios";
@@ -455,7 +476,11 @@ export default {
             }
             axios
                 .get(url, {
-                    params: { per_page: this.per_page },
+                    params: {
+                        per_page: this.per_page,
+                        filtra_estado,
+                        estado: this.filter,
+                    },
                 })
                 .then((res) => {
                     this.showOverlay = false;

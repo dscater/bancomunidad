@@ -52,6 +52,7 @@
                                                     v-model="filter"
                                                     type="search"
                                                     placeholder="Buscar"
+                                                    @keyup="filtraEstado"
                                                 ></b-form-input>
 
                                                 <b-input-group-append>
@@ -59,7 +60,10 @@
                                                         class="bg-primary"
                                                         variant="primary"
                                                         :disabled="!filter"
-                                                        @click="filter = ''"
+                                                        @click="
+                                                            filter = '';
+                                                            filtraEstado();
+                                                        "
                                                         >Borrar</b-button
                                                     >
                                                 </b-input-group-append>
@@ -257,7 +261,24 @@ export default {
         this.getCargos();
         this.loadingWindow.close();
     },
+    watch: {
+        filter(newVal) {
+            if (newVal.trim() == "") {
+                this.getCargos();
+            }
+        },
+    },
     methods: {
+        filtraEstado() {
+            if (
+                this.filter.toLowerCase() == "deshabilitado" ||
+                this.filter.toLowerCase() == "habilitado"
+            ) {
+                this.getCargos(1);
+            } else {
+                this.getCargos();
+            }
+        },
         // Seleccionar Opciones de Tabla
         editarRegistro(item) {
             this.oCargo.id = item.id;
@@ -270,18 +291,20 @@ export default {
         },
 
         // Listar Cargos
-        getCargos() {
+        getCargos(filtra_estado = 0) {
             this.showOverlay = true;
             this.muestra_modal = false;
             let url = "/admin/cargos";
             if (this.pagina != 0) {
                 url += "?page=" + this.pagina;
             }
-            axios.get(url).then((res) => {
-                this.showOverlay = false;
-                this.listRegistros = res.data.cargos;
-                this.totalRows = res.data.total;
-            });
+            axios
+                .get(url, { params: { filtra_estado, estado: this.filter } })
+                .then((res) => {
+                    this.showOverlay = false;
+                    this.listRegistros = res.data.cargos;
+                    this.totalRows = res.data.total;
+                });
         },
         eliminaCargo(id, descripcion) {
             Swal.fire({

@@ -14,6 +14,13 @@ class Sistema extends Model
         "fecha_produccion", "empresa_proveedora", "fecha_registro", "estado"
     ];
 
+    protected $appends = ["estado_txt"];
+
+    public function getEstadoTxtAttribute()
+    {
+        return $this->estado == 1 ? 'HABILITADO' : 'DESHABILITADO';
+    }
+
     public function perfiles()
     {
         return $this->hasMany(PerfilSistema::class, 'sistema_id');

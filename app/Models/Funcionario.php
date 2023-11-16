@@ -16,7 +16,12 @@ class Funcionario extends Model
 
     protected $with = ["cargo", "regional", "agencia"];
 
-    protected $appends = ["full_name"];
+    protected $appends = ["full_name", "estado_txt"];
+
+    public function getEstadoTxtAttribute()
+    {
+        return $this->estado == 1 ? 'HABILITADO' : 'DESHABILITADO';
+    }
 
     public function getFullNameAttribute()
     {

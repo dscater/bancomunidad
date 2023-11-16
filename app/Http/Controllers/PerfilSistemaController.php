@@ -17,6 +17,17 @@ class PerfilSistemaController extends Controller
     public function index(Request $request)
     {
         $perfil_sistemas = PerfilSistema::all();
+        if (isset($request->filtra_estado) && $request->filtra_estado == 1) {
+            $estado_txt = mb_strtolower($request->estado);
+            $estado = 2;
+            if ($estado_txt == "habilitado") {
+                $estado = 1;
+            }
+            if ($estado_txt == "deshabilitado") {
+                $estado = 0;
+            }
+            $perfil_sistemas = PerfilSistema::where("estado", $estado)->get();
+        }
         return response()->JSON(['perfil_sistemas' => $perfil_sistemas, 'total' => count($perfil_sistemas)], 200);
     }
 

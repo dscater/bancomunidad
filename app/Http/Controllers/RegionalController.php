@@ -16,6 +16,19 @@ class RegionalController extends Controller
     public function index(Request $request)
     {
         $regionals = Regional::all();
+
+        if (isset($request->filtra_estado) && $request->filtra_estado == 1) {
+            $estado_txt = mb_strtolower($request->estado);
+            $estado = 2;
+            if ($estado_txt == "habilitado") {
+                $estado = 1;
+            }
+            if ($estado_txt == "deshabilitado") {
+                $estado = 0;
+            }
+            $regionals = Regional::where("estado", $estado)->get();
+        }
+
         return response()->JSON(['regionals' => $regionals, 'total' => count($regionals)], 200);
     }
 

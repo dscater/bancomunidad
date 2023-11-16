@@ -13,6 +13,13 @@ class PerfilSistema extends Model
 
     protected $with = ["perfil", "sistema"];
 
+    protected $appends = ["estado_txt"];
+
+    public function getEstadoTxtAttribute()
+    {
+        return $this->estado == 1 ? 'HABILITADO' : 'DESHABILITADO';
+    }
+
     public function perfil()
     {
         return $this->belongsTo(Perfil::class, 'perfil_id');
